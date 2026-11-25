@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나가사키 맛집 스코어 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#123038;
+    --indigo-2:#1b4752;
+    --kaki:#c0392b;
+    --kaki-soft:#dc6a52;
+    --paper:#f5eee2;
+    --paper-2:#ece2d1;
+    --ink:#1a160f;
+    --muted:#7d7361;
+    --line:#d9ccb4;
+    --gold:#b8862f;
+    --good:#4f7a4a;
+    --warn:#b6772a;
+    --bad:#a8492f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+
+  header{background:var(--indigo);color:var(--paper);padding:30px 0 64px;position:relative;overflow:hidden}
+  header .inner{max-width:760px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+  .eyebrow{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--kaki-soft);font-weight:700;margin-bottom:12px}
+  header h1{font-family:'Shippori Mincho',serif;font-weight:800;font-size:clamp(28px,7vw,44px);line-height:1.15;letter-spacing:-.01em}
+  header h1 .jp{display:block;font-size:.5em;letter-spacing:.18em;color:#a7c0c5;font-weight:600;margin-top:8px}
+  header p.sub{margin-top:16px;color:#bcd0d3;font-size:14px;max-width:48ch}
+  header .trip{margin-top:14px;display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;color:#f0d9a8;border:1px solid #3c6670;border-radius:999px;padding:5px 13px}
+  .noren{position:absolute;top:0;left:0;right:0;height:8px;background:repeating-linear-gradient(90deg,var(--kaki) 0 40px,var(--indigo-2) 40px 44px);opacity:.9}
+
+  .method{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;margin-top:-44px;position:relative;z-index:3;padding:18px 18px 8px}
+  .method h2{font-size:13px;letter-spacing:.04em;color:var(--muted);font-weight:700;margin-bottom:12px;text-transform:uppercase}
+  .axes{display:flex;flex-wrap:wrap;gap:8px 14px;margin-bottom:12px}
+  .axis{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500}
+  .axis .dot{width:9px;height:9px;border-radius:50%}
+  .axis.taste .dot{background:var(--kaki)}
+  .axis.value .dot{background:var(--gold)}
+  .axis.rep .dot{background:var(--indigo)}
+  .axis.access .dot{background:var(--good)}
+  .axis.conv .dot{background:#9a8fb0}
+  .method .note{font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding:10px 0;line-height:1.5}
+  .method .note b{color:var(--bad)}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:18px 0 6px;position:sticky;top:0;background:var(--paper);z-index:20;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;font-family:'Noto Sans KR',sans-serif}
+  .tab .n{font-family:'Shippori Mincho',serif;color:var(--muted);margin-right:5px;font-size:12px}
+  .tab:hover{border-color:var(--kaki-soft)}
+  .tab.on{background:var(--indigo);color:var(--paper);border-color:var(--indigo)}
+  .tab.on .n{color:var(--kaki-soft)}
+
+  .section{display:none;padding-top:6px}
+  .section.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+
+  .itin-intro{font-size:13px;color:#4a4232;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:12px 2px 6px;line-height:1.65}
+  .itin-intro b{color:var(--kaki)}
+  .day{background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:14px;overflow:hidden}
+  .day-top{display:flex;align-items:center;gap:10px;padding:12px 15px;background:var(--indigo);color:var(--paper);flex-wrap:wrap}
+  .day-no{font-family:'Shippori Mincho',serif;font-weight:800;font-size:16px;color:#e8c37a;flex:0 0 auto}
+  .day-date{font-size:12px;color:#aac3c8;font-weight:600}
+  .day-theme{font-size:12.5px;font-weight:700;margin-left:auto;color:#fff}
+  .rows2{padding:8px 15px 8px}
+  .irow2{display:flex;gap:11px;padding:8px 0;border-bottom:1px dashed var(--paper-2);font-size:13.5px;line-height:1.5}
+  .irow2:last-child{border-bottom:none}
+  .irow2 .t{font-family:'Shippori Mincho',serif;font-weight:700;color:var(--kaki);flex:0 0 46px;font-size:12.5px;padding-top:2px}
+  .irow2 .itxt{flex:1;min-width:0}
+  .irow2 .memo{display:block;font-size:11.8px;color:var(--muted);margin-top:3px;line-height:1.6}
+  .irow2.eat{background:#fffaf2;margin:0 -15px;padding-left:15px;padding-right:15px}
+  .plink{color:var(--indigo-2);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--kaki-soft);white-space:nowrap}
+  .plink:hover{color:var(--kaki)}
+  .plink:active{opacity:.6}
+  .meal{display:inline-block;font-size:10.5px;font-weight:700;background:var(--kaki);color:#fff;padding:1px 7px;border-radius:5px;margin-right:6px;vertical-align:1px}
+  .warnbox{background:#fbe9e3;border:1px solid #e9c3b6;border-radius:12px;padding:12px 15px;margin-top:14px;font-size:12.8px;line-height:1.7;color:#5a3328}
+  .warnbox h4{font-family:'Shippori Mincho',serif;font-size:15px;font-weight:800;margin-bottom:7px;color:var(--bad)}
+  .warnbox b{color:var(--bad)}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:18px 2px 4px}
+  .sec-head h3{font-family:'Shippori Mincho',serif;font-size:24px;font-weight:800}
+  .sec-head .jp{font-size:12.5px;color:var(--muted);font-weight:600;letter-spacing:.08em}
+  .sec-head .cnt{font-size:12px;color:var(--muted);font-weight:600;margin-left:auto}
+  .sec-note{font-size:12.5px;color:#4a4232;background:#fbf4e7;border:1px solid #ecdcbd;border-radius:10px;padding:10px 13px;margin:10px 2px 4px;display:flex;gap:8px;line-height:1.6}
+  .sec-note b{color:var(--bad)}
+  .sec-note .ar{color:var(--kaki);font-weight:800}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;margin-top:14px;position:relative;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .card .rank{position:absolute;top:-9px;left:14px;font-family:'Shippori Mincho',serif;font-weight:800;font-size:12px;letter-spacing:.05em;background:var(--indigo);color:var(--paper);padding:2px 9px;border-radius:6px}
+  .card.top .rank{background:var(--kaki)}
+  .card-top{display:flex;gap:14px;align-items:flex-start}
+  .stamp{flex:0 0 auto;width:58px;height:58px;border-radius:50%;border:2.5px solid var(--kaki);color:var(--kaki);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;line-height:1;margin-top:2px}
+  .stamp .v{font-size:21px;font-weight:800}
+  .stamp .l{font-size:8px;letter-spacing:.08em;margin-top:2px;color:var(--kaki-soft)}
+  .meta{flex:1;min-width:0}
+  .name-ko{font-weight:900;font-size:17px;line-height:1.25}
+  .name-jp{font-size:12px;color:var(--muted);margin-top:2px}
+  .badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--paper-2);color:#5a513e;border:1px solid var(--line)}
+  .badge.g{background:#eaf2e8;color:var(--good);border-color:#cfe0cb}
+  .badge.r{background:#f6e7e1;color:var(--bad);border-color:#e8cabd}
+  .badge.star{background:var(--indigo);color:var(--paper);border-color:var(--indigo)}
+
+  .bars{margin-top:13px;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+  @media(max-width:520px){.bars{grid-template-columns:1fr}}
+  .bar{display:flex;align-items:center;gap:9px}
+  .bar .lab{font-size:11.5px;color:var(--muted);font-weight:600;width:54px;flex:0 0 auto}
+  .bar .track{flex:1;height:6px;background:var(--paper-2);border-radius:4px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:4px;width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .bar .sc{font-size:11.5px;font-weight:700;width:24px;text-align:right;flex:0 0 auto;font-family:'Shippori Mincho',serif}
+  .f-taste{background:var(--kaki)}
+  .f-value{background:var(--gold)}
+  .f-rep{background:var(--indigo)}
+  .f-access{background:var(--good)}
+  .f-conv{background:#9a8fb0}
+
+  .why{margin-top:13px;font-size:13.5px;line-height:1.6;color:#352e22;border-top:1px solid var(--paper-2);padding-top:11px}
+  .why b{color:var(--kaki);font-weight:700}
+  .maplink{display:inline-flex;align-items:center;gap:6px;margin-top:12px;text-decoration:none;font-size:13px;font-weight:700;color:var(--paper);background:var(--kaki);padding:8px 14px;border-radius:9px;transition:.15s}
+  .maplink:hover{background:var(--kaki-soft)}
+  .maplink:active{transform:scale(.97)}
+  .loc-pill{position:absolute;top:-9px;right:14px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:6px;background:var(--indigo);color:var(--paper)}
+
+  footer{margin-top:34px;text-align:center;font-size:12px;color:var(--muted);line-height:1.7}
+  footer .hr{height:1px;background:var(--line);margin:0 auto 18px;max-width:120px}
+</style>
+</head>
+<body>
+<header>
+  <div class="noren"></div>
+  <div class="inner">
+    <div class="eyebrow">Nagasaki Food Score</div>
+    <h1>나가사키 맛집 스코어
+      <span class="jp">長崎グルメ・スコアガイド</span>
+    </h1>
+    <p class="sub">구글 리뷰·일본 현지 평가·한국 블로그·유튜브를 취합해 광고성 평가와 관광지 함정을 거르고, 16개 부문 96곳을 5개 축으로 점수화했습니다. 첫 탭은 <b>2박 3일 일정표</b>(장소를 누르면 구글 지도로 연결)입니다.</p>
+    <div class="trip">12/5(토) – 12/7(월) · 2박 3일 · 나가사키 시내 + 우레시노 온천</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="method">
+    <h2>스코어링 5축 · 종합 10점 만점</h2>
+    <div class="axes">
+      <span class="axis taste"><span class="dot"></span>맛 (35%)</span>
+      <span class="axis rep"><span class="dot"></span>현지평판 (25%)</span>
+      <span class="axis value"><span class="dot"></span>가성비 (15%)</span>
+      <span class="axis access"><span class="dot"></span>시내접근성 (12.5%)</span>
+      <span class="axis conv"><span class="dot"></span>편의성 (12.5%)</span>
+    </div>
+    <div class="note">범위는 <b>신치중화가 · 하마노마치 · 시안바시 · 나가사키역</b> 등 전차로 닿는 시내권 + <b>우레시노 온천</b>(12/6 당일치기). 현지평판 = 구글 평점·리뷰 수·일본/한국 커뮤니티 언급. 편의성 = 웨이팅·예약·언어메뉴·영업시간. 나가사키는 <b>현금만 받는 노포와 수요일·일요일 휴무</b>가 유난히 많으니 방문 전 꼭 확인하세요.</div>
+  </div>
+
+  <nav class="tabs" id="tabs"></nav>
+  <main id="main"></main>
+
+  <footer>
+    <div class="hr"></div>
+    데이터 기준 2026년 11월 · 구글 평점/리뷰 수는 변동됩니다.<br>
+    영업시간·휴무·예약은 방문 전 재확인하세요. 점수는 취합 데이터 기반의 상대 평가입니다.
+  </footer>
+</div>
+
+<script>
+const W={taste:.35,rep:.25,value:.15,access:.125,conv:.125};
+function overall(s){return (s.taste*W.taste+s.rep*W.rep+s.value*W.value+s.access*W.access+s.conv*W.conv);}
+
+// 구글 지도 place_id (한국어 이름 기준) — 동명 지점이 아니라 정확히 이 가게로 연결됩니다.
+const PID={
+"킷사 미나미야마테 8반칸":"ChIJy0lNUedTFTUR7yXyKZ52lN8",
+"히가시야마테 13번관":"ChIJnfTVYxFTFTURnQEZ7ZWSrlk",
+"마루산카쿠시카쿠":"ChIJ1_LpLHhTFTURjiJ6c-kYJ1Q",
+"애틱 커피 메가네바시":"ChIJ73V9rB5TFTURdQQ6kl7Z2RU",
+"레커":"ChIJe-R61g9TFTURyLj9VGYs3u4",
+"잇초잇제츠 시안바시":"ChIJB8X1ZKNTFTURUhByHMeJkqg",
+"히마야":"ChIJca_2_T9TFTURZknpUtMcsxo",
+"집소":"ChIJFxPtubZTFTURuSwgVxH9jtc",
+"소안 요코초":"ChIJeRS2TaogQDURpiB8_MZ7Cl8",
+"사가 히라카와야 우레시노점":"ChIJazTsKFUnQDURW_kpK1tuXps",
+"후지카와 두부점":"ChIJWznKPQOeajURizCCcMVv_AE",
+"후쿠다 두부점":"ChIJkblagBueajUR-CPeJVfrmWw",
+"시즈":"ChIJ7zTDB6kgQDURuRFSIqWxjoY",
+"티하우스 토쿠나가":"ChIJFWQMjQCeajUR_e8IxC_2jgk",
+"우레시노차 교류관 차오시루":"ChIJLU3c8qwgQDURfaoZiULqSEQ",
+"오차노 우레시노엔":"ChIJoauPzGwnQDURpmXfk0NQirI",
+"티 살롱 츠바키":"ChIJb1d2E5cnQDURxr1loP6c_To",
+"시카이로":"ChIJ___vIxBTFTURWIe18Dl1IPo",
+"코잔로 중화가신관":"ChIJgaMCqhVTFTURSOCDBG83j7I",
+"후쿠쥬":"ChIJtXVluRVTFTUR9U32Bqhciqs",
+"카이라쿠엔":"ChIJBYHNoBVTFTURMp_cHZ0ey2M",
+"라오리":"ChIJ58IZUxRTFTURIZObzWwNn7w",
+"츄카 다이하치":"ChIJfRJ4IzpTFTUR3WvibiBI53E",
+"유카한텐":"ChIJM9a8ad2sajURdZIbJzqJPrE",
+"미도코로 스즈야":"ChIJgyS4gxRTFTUR_EbsjzvXNc8",
+"에도비시":"ChIJU18k7z1TFTURWyuW8xTckzU",
+"츠루찬":"ChIJf5VjTkBTFTURP0VNhLdphsg",
+"닉 아스테인 요로즈야마치":"ChIJVVVVVT5TFTUR65i8Br8LlJY",
+"카츠시카 토루코라이스노미세":"ChIJUa-lNwBTFTURQEFPZopndrE",
+"코롯케":"ChIJ8QH1xUBTFTURrdFbtHzwJAI",
+"츠루찬 클래식":"ChIJ0aphdUdTFTURprukyJjVAPQ",
+"요쇼쿠야 히마와리테이":"ChIJdfzfdB-zajURPjOFnM5qEY8",
+"키즈나":"ChIJsaBmkQ9TFTURk7chToyeYXo",
+"이와사키혼포 니시하마마치":"ChIJS92HdRVTFTURLqCf9-t1dbY",
+"카쿠니야 코지마":"ChIJf-go4T9TFTURSLB8Bw4Y-80",
+"이와사키 미나미야마테":"ChIJZeeWww9TFTURQ219vW0bI7g",
+"이와사키혼포 칸코도리":"ChIJ8Uj07T9TFTURdMVVBmfG0yQ",
+"신치 중화가":"ChIJK3MfoRVTFTURFhFVj6JIlxE",
+"스시 히노카":"ChIJWfJwOjpTFTURcQcVMurcMbE",
+"니기리노 하야시":"ChIJ1xxyGpCtajUR42JBWKdv1L4",
+"스시 캇포 사쿠라이":"ChIJfdh4BNOsajURa_DFAymfIt0",
+"이케다 센교":"ChIJIbVuHHdTFTURcUue8vyxLbk",
+"타마츠루미":"ChIJVb2BVAFTFTUReU6U2MlzMa0",
+"하마나카 스이산":"ChIJ_5ZljU5TFTURethFnRgKYDs",
+"코다 쇼쿠도":"ChIJrz10atNTFTURpQloZLmCB6A",
+"슌사이 코코로":"ChIJBS21SEBTFTURg4L0lOjrzYo",
+"우미토":"ChIJu7CHAUBTFTURi1N56qu0hxU",
+"자코야 시안바시":"ChIJ44HqHkBTFTURcMbe4aJI8wM",
+"타이슈캇포 안라쿠시":"ChIJ6aY8DUBTFTURq0GWl6VJ0uk",
+"코이소":"ChIJS7EmA0BTFTURafRsVICQVeU",
+"츠키마치 나가사키 요코초":"ChIJ0W3caOpTFTURODPVso5lVvI",
+"바라몬 쇼쿠도":"ChIJE8L88EBTFTURIkvE8AbeGo0",
+"도하센":"ChIJ221cNjhTFTURkTqgL4gNCv8",
+"슌사이 나가야":"ChIJF2kAnEBTFTURgLLuaJzWEo4",
+"야키토리 키타자와":"ChIJSWxVIBdTFTURZ5ifs9MTSzE",
+"야키토리 렌":"ChIJW9zfNcdTFTURGEf4at2vBgs",
+"야이토루켄":"ChIJV_QAG0FTFTURSpUm5mLuYm0",
+"야키토리 토도로키":"ChIJJXiOtmpTFTURKOewW3z_boc",
+"야키토리 부쇼몬":"ChIJGbJmBUBTFTUR-JTjnkV8q-s",
+"라멘 히이라기":"ChIJc5IqUhVTFTUR35tUai8Msag",
+"멘야 올웨이즈":"ChIJ0RcsjUBTFTURGg9gnCYitlI",
+"노기 추카소바텐":"ChIJfxPtNtpTFTURZAqLwVYYQR0",
+"라멘 쇼":"ChIJ_d6iPdasajURKxoEvQK34dE",
+"카츠시카":"ChIJy8c8RRRTFTURz8dJ-oyDhc4",
+"분지로 아사히마치":"ChIJf_JKTyJTFTUR_bQbZXz2d5A",
+"분지로 하마구치점":"ChIJIQEGCtOsajURTrQYBg6PfKA",
+"톤카츠 그랑듀 루캉":"ChIJu0W21kdTFTURExNg6QMn27Y",
+"쿠로부타도리 로쿠하쿠":"ChIJ0YpZeNtTFTURPhhBNGfGUPs",
+"교자 만토쿠":"ChIJuzYegRVTFTURgRqACfBVZYE",
+"운류테이 교자 하마노마치":"ChIJ3eeoa0BTFTURhj-5p0e7gBs",
+"호운테이 토리후쿠":"ChIJs4GGVxVTFTURo2-_fgfdWFE",
+"리카엔 부타만 교자":"ChIJoRKh9UZTFTURVyJHwo7_MTw",
+"다시본즈":"ChIJp5kc6z9TFTURe8U3XWS6FIo",
+"고토우동 시마야":"ChIJM22tBtOsajURxIzKQGPHgsk",
+"데지마 오타세이멘":"ChIJX_O1l5NTFTURSJGqaQS31qo",
+"고토우동 츠바키야":"ChIJ8QjiRBFTFTURVvLG_O6ghGM",
+"다시본즈 카모메이치바점":"ChIJWQk1x6NTFTURIpbOPYrOQEE",
+"후쿠사야 본점":"ChIJY5tnpGpTFTURjDxMkvww9-o",
+"쇼오켄 본점":"ChIJ8aNPCkdTFTURKeRHQqqSocU",
+"분메이도 소혼텐":"ChIJcxUS7D1TFTURIj8UBjRnvh4",
+"카페 세비야":"ChIJ8aNPCkdTFTURCYqSyYPU5sA",
+"쇼오켄 카모메이치바점":"ChIJL1-lpztTFTURJsHqIDpWebo",
+"후지오":"ChIJjTMi_EBTFTURehSJuhC3HHc",
+"분분":"ChIJeSu2WBRTFTURplbQ1lsY1_8",
+"바 나가타":"ChIJe3AdWhVTFTUR51MDwojsHxQ",
+"바 스트랜드":"ChIJyYm7PEBTFTURNkfX5H88yhA",
+"램프라이터":"ChIJGfN2CEFTFTURa17rGlJwoVA",
+"빅터":"ChIJmb6XoGpTFTURYL0XuuBLZTc",
+"바 나카노":"ChIJyYm7PEBTFTURNd6uwwDr6NY",
+"칸자키 쇼쿠도":"ChIJIU3Y80ZTFTUReqzQnjzF8OU",
+"키친 마사":"ChIJKWyS5ztTFTURFtgGNvjSR4k",
+"나가사키 와규 야키니쿠 퓨어":"ChIJMTqBtxVTFTUROzywC6jEyZE",
+"더 스탠드 힐":"ChIJodEiY-RTFTURQT5q84zKiGw",
+"코코 버거스":"ChIJ_9I3OyVTFTURbiAtgtqOupQ",
+"로지 카페":"ChIJ7xgkTo5TFTUR3nmqroSA5bU",
+"베이스":"ChIJ-xGo_EBTFTURAFi-u_ntT_U"
+};
+function mapUrl(it){
+  const q=encodeURIComponent((it.jp.split(' / ')[0])+' '+(it.area||'長崎'));
+  const pid=PID[it.ko];
+  return pid
+    ? `https://www.google.com/maps/search/?api=1&query=${q}&query_place_id=${pid}`
+    : `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+const DATA=[
+{cat:"짬뽕·사라우동",jp:"ちゃんぽん・皿うどん",note:"나가사키에 왔으면 무조건 한 번. <b>원조(시카이로)와 맛의 1등은 다릅니다.</b> 시카이로는 짬뽕을 처음 만든 집이라는 역사값이 크고 5층 바다 전망이 좋지만 평점 3.9에 1시간 대기, “맛은 심심하다”는 리뷰가 꾸준합니다. 맛만 보면 <b>후쿠쥬 · 츄카 다이하치 · 유카한텐</b>이 위입니다. 중화가 식당은 대부분 <b>현금만</b>.",items:[
+  {ko:"후쿠쥬",jp:"福寿 / Fukuju",loc:"신치중화가",s:{taste:9.4,value:9.2,rep:8.6,access:9.4,conv:6.8},badges:["중화가 1등급","웍 불맛","현금만","★4.2·667"],why:"중화가 메인 골목에서 한 블록 비켜나 있어 <b>관광객 비중이 낮고 맛은 가장 안정적</b>. “여기서 먹은 짬뽕과 사라우동이 최고였다, 광둥식으로 말하는 웍헤이(불맛)가 살아있다”는 리뷰가 반복됩니다. 탕수육·춘권·마파두부까지 전부 평이 좋고 가격도 합리적. <b>현금만</b>, 11–14시/17–20시 브레이크타임."},
+  {ko:"츄카 다이하치",jp:"中華 大八 / Chuka Daihachi",loc:"다이코쿠마치",s:{taste:9.3,value:9.3,rep:9.0,access:8.6,conv:5.5},badges:["현지인 성지","점심만","수·일 휴무","현금만","★4.3·1,231"],why:"나가사키역 근처의 <b>쇼와 시대 그대로인 노포</b>. 리뷰 1,231개에 4.3이고 손님 대부분이 현지인입니다. 짬뽕 국물이 진하고 야키소바는 살짝 달큰한 쪽. 포션도 큽니다. 다만 <b>11:30–14:30 점심 영업만</b> 하고 <b>수요일·일요일 휴무</b>라 12/7(월) 아침 비행 전엔 못 가고 <b>12/5·6 점심에만</b> 가능합니다. 영어 메뉴 없음, 현금만."},
+  {ko:"유카한텐",jp:"中華料理 有華飯店 / Yuka Hanten",loc:"오기마치",s:{taste:9.4,value:9.2,rep:9.2,access:6.8,conv:6.0},badges:["평점 4.6","일본인 부부 운영","목요일 휴무","좌석 적음","★4.6·664"],why:"<b>나가사키 짬뽕 중 구글 평점이 가장 높은 집(4.6)</b>. 중국식 간판이지만 일본인 부부가 운영하고 응대가 아주 친절합니다. 짬뽕 세트에 딸려 나오는 <b>볶음밥이 오히려 주인공</b>이라는 평이 많고 마파두부·가라아게도 훌륭. 단 시내에서 전차로 올라가야 하는 오기마치라 접근성이 떨어지고 좌석이 적어 대기가 있습니다."},
+  {ko:"미도코로 스즈야",jp:"味処 寿々屋 / Suzuya",loc:"주닌마치",s:{taste:9.1,value:9.7,rep:8.8,access:8.0,conv:6.0},badges:["750엔 짬뽕","현지인만","포션 거대","일요휴무","★4.4·222"],why:"언덕을 조금 올라가야 하는 <b>완전한 동네 쇼쿠도</b>. “우리 빼고 전부 현지인이었다”, “<b>사라짬뽕과 짬뽕이 각 750엔</b>인데 양이 어마어마했다”는 리뷰가 대표적입니다. 사라우동을 시키는 손님이 유독 많습니다. 주인 부부가 친절하기로 유명. 점심 11:30–13:30, 저녁은 17–18시로 짧고 <b>일요일 휴무</b>."},
+  {ko:"라오리",jp:"老李 / Lao Lee",loc:"신치중화가",s:{taste:8.8,value:8.6,rep:8.8,access:9.5,conv:7.2},badges:["대만식","볶음밥 호평","웨이팅 김","매일 영업","★4.1·1,028"],why:"중화가에서 <b>줄이 가장 긴 집 중 하나</b>. 짬뽕과 탄탄면 둘 다 평이 좋지만 “<b>볶음밥이 압도적으로 맛있어서 면을 이겼다</b>”는 리뷰가 여러 개입니다. 대만식 샤오롱바오·약선 갈비도 있음. 매일 영업이라 일정 짜기는 편하지만, 점심 피크엔 30분 이상 대기하고 바닥이 끈적하다는 지적이 있습니다. <b>1시 반 넘어 가면 바로 입장</b>."},
+  {ko:"에도비시",jp:"江戸びし / Edobishi",loc:"에도마치",s:{taste:8.9,value:8.8,rep:8.6,access:8.6,conv:6.3},badges:["가족 운영","특제짬뽕 1,500엔","현금만","일요 저녁 휴무","★4.3·527"],why:"분메이도 카스테라 본점 바로 옆, <b>3대가 함께 운영하는 가족 식당</b>. 해산물이 가득 들어간 <b>특제 짬뽕(1,500엔)</b>이 간판이고 볶음밥 평도 좋습니다. 손주들이 주문을 받는 분위기가 좋다는 후기가 많음. 메뉴는 일본어뿐이지만 사진이 있어 주문은 가능. <b>현금만</b>, 일요일은 점심만."},
+  {ko:"카이라쿠엔",jp:"会楽園 / Kairakuen",loc:"신치중화가",s:{taste:8.6,value:8.8,rep:8.4,access:9.5,conv:7.8},badges:["넓고 조용","매일 영업","빠른 서빙","★3.9·900"],why:"중화가 안에서 <b>가장 넓고 덜 시끄러운</b> 집. 음식이 빠르게 나오고 가격대가 낮아 줄 서기 싫을 때 안전한 선택입니다. 짬뽕 국물과 사라우동 평이 꾸준하고 참깨경단(지마단)이 숨은 별미. 다만 <b>19:50 라스트오더</b>로 저녁이 아주 짧으니 주의."},
+  {ko:"시카이로",jp:"四海樓 / Shikairo",loc:"마츠가에마치",s:{taste:8.2,value:7.6,rep:9.4,access:8.2,conv:5.6},badges:["짬뽕 원조","5층 항구뷰","대기 1시간","수요 휴무","★3.9·4,127"],why:"<b>1899년 짬뽕을 처음 만든 집</b>. 2층에 짬뽕 박물관이 있고 5층 창가 자리에서 나가사키 항이 내려다보입니다. 글로버가든·오우라천주당 동선에 있어 관광과 묶기 좋음. 다만 <b>맛 자체는 “심심하다·기다릴 값은 아니다”는 리뷰가 꾸준</b>하고, 일요일 점심엔 밖에서 30분+안에서 20분, 13시엔 줄을 끊습니다. <b>맛이 아니라 원조를 먹으러 가는 곳</b>으로 생각하세요. 수요일 휴무."},
+  {ko:"코잔로 중화가신관",jp:"江山楼 中華街新館 / Kozanro",loc:"신치중화가",s:{taste:8.2,value:7.4,rep:8.8,access:9.5,conv:6.0},badges:["중화가 대표","크리미한 국물","월·화 휴무","가격 높음","★3.8·2,080"],why:"중화가에서 가장 이름난 집으로 <b>국물이 크리미하고 진한 쪽</b>. 동파육(토루니쿠)과 춘권도 유명합니다. 다만 “<b>채소에서 쓴맛이 나고 사라우동이 과하게 달다, 퀄리티 대비 비싸다</b>”는 리뷰가 적지 않고 <b>월·화 휴무</b>입니다. 가려면 오픈 15분 전에 줄 서는 게 정석."},
+]},
+
+{cat:"토루코라이스",jp:"トルコライス",note:"돈까스 + 나폴리탄 스파게티 + 필라프가 한 접시에 올라가는 <b>나가사키에서만 먹는 양식</b>. 터키와는 아무 관계 없습니다. 남자 둘이면 양은 충분하고도 남으니 <b>1인 1접시보다 2인 1접시 + 다른 메뉴</b>가 낫다는 후기도 많습니다.",items:[
+  {ko:"카츠시카 토루코라이스노미세",jp:"かつしか トルコライスの店",loc:"카고마치",s:{taste:9.5,value:9.0,rep:8.6,access:9.3,conv:6.5},badges:["돈까스 명가의 전문점","두툼한 로스카츠","화요휴무","표본 적음","★4.0·49"],why:"뒤에 나오는 돈까스 1위 <b>카츠시카가 따로 낸 토루코라이스 전문점</b>. “다른 집은 스파게티에서 대충 하는데 여기는 면까지 안 봐줬다”, “<b>두툼한 등심카츠를 저온에서 제대로 튀겨 고기 맛이 살아있다</b>”, 카레소스와 데미글라스 전부 수제라는 리뷰. 리뷰 수가 적은 건 <b>최근에 연 신규점</b>이기 때문입니다. 맛만 보면 여기가 1순위. 화요일 휴무."},
+  {ko:"코롯케",jp:"コロッケ / Korokke",loc:"히가시후루카와마치",s:{taste:9.3,value:9.4,rep:9.0,access:8.8,conv:6.2},badges:["크로켓 전문","가족 경영","화요휴무","점심 위주","★4.4·546"],why:"이름 그대로 <b>크로켓 전문점</b>인데 토루코라이스 카츠 세트가 숨은 명작. “나가사키에서 6년 살았는데 아직도 일본 전체에서 먹은 크로켓 중 최고”라는 리뷰가 상징적입니다. 겉은 얇게 바삭, 속은 크리미. 작고 아늑한 가게라 <b>줄이 있지만 기다릴 값</b>. 식후 커피를 서비스로 줍니다. 화요일 휴무, 대체로 점심~오후만."},
+  {ko:"닉 아스테인 요로즈야마치",jp:"ニック・アーステン 万屋町店",loc:"요로즈야마치",s:{taste:9.0,value:9.2,rep:8.8,access:9.4,conv:7.5},badges:["조합 100가지","현지 인기","계단 웨이팅","매일 영업","★4.1·888"],why:"<b>밥·소스·고기를 골라 100가지 넘게 조합</b>하는 집. 기본 토루코라이스 1,560엔인데 돈까스가 완벽하게 튀겨져 나오고 오무라이스 계란이 폭신합니다. 하마노마치 아케이드 바로 옆 2층이라 접근성 최고, 좁은 계단에 줄이 서 있는 게 트레이드마크. <b>하야시라이스</b>도 평이 좋아 속이 부담스러우면 그쪽으로."},
+  {ko:"츠루찬",jp:"ツル茶ん / Tsuruchan",loc:"아부라야마치",s:{taste:8.0,value:7.6,rep:9.3,access:9.5,conv:7.0},badges:["토루코라이스 원조","밀크셰이크 발상지","수요휴무","호불호 큼","★3.9·2,622"],why:"1925년 개업, <b>규슈에서 가장 오래된 킷사텐</b>이자 토루코라이스와 <b>나가사키 밀크셰이크(숟가락으로 떠먹는 빙수형)</b>를 처음 만든 집. 레트로 인테리어가 진짜배기입니다. 다만 1,880엔에 “통조림 스파게티 수준, 극히 평범하다”는 리뷰가 꾸준해요. <b>식사보다 밀크셰이크를 먹으러 들르는 곳</b>으로 보면 만족도가 올라갑니다. 수요일 휴무."},
+  {ko:"키즈나",jp:"絆 / Kizuna",loc:"미나미야마테",s:{taste:8.6,value:9.0,rep:8.4,access:8.0,conv:6.8},badges:["글로버가든 도보","조용함","점심만","월·일 휴무","★4.3·212"],why:"<b>글로버가든·오우라천주당 바로 아래</b>인데 관광 상점가에서 한 블록 비켜나 있어 조용합니다. 토루코라이스 재료 퀄리티가 좋고 직원이 친절하며 일부는 영어가 됩니다. 항구가 보이는 밝은 홀. 관광 동선에서 점심 해결하기엔 가장 합리적. <b>11:30–16:00 점심만, 월·일 휴무</b>."},
+  {ko:"츠루찬 클래식",jp:"ツル茶ん クラシック",loc:"우오노마치",s:{taste:8.4,value:8.8,rep:8.0,access:8.8,conv:5.8},badges:["시청 옆","쇼와 인테리어","평일 점심만","표본 적음","★4.1·48"],why:"츠루찬의 별관 격으로 <b>시청 바로 옆</b>. 벽을 가득 채운 옛 포스터와 스크랩이 본점보다 오히려 더 레트로합니다. 메뉴판 없이 구두로 주문하는 방식. 필라프를 버터에 볶아 내는 등 <b>본점보다 음식 평이 낫다</b>는 의견이 많습니다. 다만 <b>평일 11:30–14:00만</b> 열어 토·일엔 못 갑니다."},
+  {ko:"요쇼쿠야 히마와리테이",jp:"洋食屋 向日葵亭 長崎市店",loc:"교도마리",s:{taste:9.0,value:9.0,rep:8.8,access:5.5,conv:6.5},badges:["현지인 1픽","TV 방영","포션 거대","시내에서 멂","★4.1·1,116"],why:"“<b>현지인들은 토루코라이스 하면 여기를 간다</b>”는 평이 붙는 집. 돈까스를 반으로 잘라 먹기 편하게 내주고 카레는 살짝 맵습니다. 보통 사이즈도 양이 엄청남. 단 <b>시내에서 차로 20~30분</b> 떨어진 교도마리라 2박 3일 일정에 끼우기는 어렵습니다 — 렌터카나 공항 가는 길에 들르는 경우에만."},
+  {ko:"레커",jp:"Lekker / レッカ",loc:"마츠가에마치",s:{taste:9.1,value:9.2,rep:8.6,access:8.4,conv:7.6},badges:["글로버가든 도보","영어 메뉴","축구 소품 가득","수요휴무"],why:"글로버 정원·오우라천주당에서 큰길 하나 비켜난 <b>동네 양식당</b>. 나가사키 출신 축구선수 요시다 마야의 사인과 유니폼이 벽을 채우고 있습니다. <b>토루코라이스가 1,280엔</b>으로 가성비가 좋고 함바그도 평이 좋으며 <b>영어 메뉴가 있습니다</b>. 저녁은 17:30 오픈 직후가 자리 잡기 쉬움. 수요일 휴무."},
+]},
+
+{cat:"카쿠니만주·중화가",jp:"角煮まんじゅう・新地中華街",note:"<b>삼겹살 조림을 폭신한 찐빵에 끼운 나가사키 대표 간식.</b> 한 개 500~700엔대로 식사 전후 간식용입니다. <b>식는 순간 맛이 반으로 줄어드니</b> 받자마자 그 자리에서 드세요. 중화가와 글로버가든 양쪽에 지점이 있습니다.",items:[
+  {ko:"이와사키혼포 니시하마마치",jp:"岩崎本舗 西浜町店",loc:"도자마치",s:{taste:9.4,value:8.6,rep:9.4,access:9.6,conv:8.6},badges:["카쿠니만주 1위","평점 4.7","좌석·화장실 있음","오토로/치즈 맛","★4.7·1,530"],why:"<b>카쿠니만주 브랜드 1위 이와사키혼포의 핵심 지점</b>(4.7·리뷰 1,530). 다른 지점과 달리 <b>테이블 3개와 화장실, 무료 물</b>이 있어 앉아서 바로 따뜻하게 먹을 수 있는 게 결정적 차이입니다. 기본 말고 <b>“오토로(より柔らか)” 버전</b>을 고르면 고기가 입에서 녹습니다. 치즈 맛도 인기. 9:30–21:00으로 길게 열어 야식으로도 가능."},
+  {ko:"카쿠니야 코지마",jp:"角煮家 こじま / Kakuniya Kojima",loc:"도자마치",s:{taste:9.3,value:8.8,rep:8.6,access:9.5,conv:7.6},badges:["고기 육즙 최상","소규모 전문점","매일 9–19시","★4.2·139"],why:"이와사키의 대안이자 <b>고기 자체의 평은 여기가 더 높습니다</b>. “지금까지 먹어본 포크번 중 최고, 고기가 입에서 녹고 소스가 훌륭하며 빵이 촉촉하다”는 리뷰. 일본어·영어가 안 통해도 손짓으로 다 되는 작은 가게입니다. 응대가 무뚝뚝하다는 평이 있지만 맛엔 영향 없음. <b>매일 9–19시</b>로 안정적."},
+  {ko:"이와사키 미나미야마테",jp:"岩崎本舗 グラバー園店",loc:"미나미야마테",s:{taste:9.2,value:8.4,rep:8.8,access:7.8,conv:8.0},badges:["글로버가든 중턱","관광 동선","솔개 주의","매일 영업","★4.3·259"],why:"<b>오우라천주당에서 글로버가든 올라가는 길 중턱</b>. 관광하다 당 떨어질 때 딱 맞는 위치입니다. 치즈 버전 추천이 많음. 실제 리뷰에 “<b>솔개가 내려와 낚아채 간다</b>”는 경고가 여러 번 나오니 야외에서 먹을 땐 손으로 가리세요. 8:45–18:15."},
+  {ko:"이와사키혼포 칸코도리",jp:"岩崎本舗 浜町観光通り店",loc:"하마마치",s:{taste:9.0,value:8.0,rep:8.4,access:9.6,conv:8.2},badges:["아케이드 한복판","테이크아웃","빵 작은 편","★4.0·131"],why:"하마노마치 아케이드 쇼핑 중에 <b>걸어가며 하나 먹기</b> 좋은 위치. 고기 평은 똑같이 좋지만 “<b>빵이 작은 편이라 가격 대비 아쉽다</b>”는 리뷰가 있어 같은 값이면 니시하마마치 지점을 권합니다. 10:00–19:30."},
+  {ko:"신치 중화가",jp:"長崎新地中華街",loc:"신치마치",s:{taste:8.0,value:8.4,rep:8.8,access:9.8,conv:8.8},badges:["일본 3대 중화가","노점 먹방","랜턴 축제","★3.7·9,616"],why:"가게가 아니라 <b>거리 자체</b>. 요코하마·고베와 함께 일본 3대 중화가이지만 실제로는 메인 골목 하나 정도로 작습니다. <b>샤오롱바오·참깨경단·과일 노점</b>을 집어 먹으며 걷는 게 핵심이고, 유리공예 가게들이 의외의 기념품 명소. 짬뽕집들이 다 여기 모여 있으니 <b>첫날 점심 베이스캠프</b>로 잡으면 동선이 깔끔합니다."},
+]},
+
+{cat:"스시",jp:"寿司",note:"나가사키는 <b>어종 가짓수가 일본 1위급</b>인 어항입니다. 다만 유명 스시야는 좌석이 10석 안팎이라 <b>예약 없이는 거의 못 들어갑니다</b>. 12/5 토요일 저녁을 노린다면 지금 바로 예약하세요.",items:[
+  {ko:"스시 히노카",jp:"鮨ひのか / Sushi Hinoka",loc:"아부라야마치",s:{taste:9.7,value:8.2,rep:9.3,access:9.3,conv:5.5},badges:["평점 4.8","오마카세","예약필수","시간 고정","월·일 휴무","★4.8·44"],why:"<b>나가사키 스시의 현재 최고점</b>. “공간 디자인부터 평온하고 세련됐는데 음식은 더 대단하다”, “셰프 야스유키가 한 점 한 점 영어로 이름을 알려주며 설명해줬다”는 리뷰. <b>점심 오마카세가 가성비가 압도적</b>이라는 평이 많습니다. 단 <b>코스 고정·요청 불가·시작 시간 고정(점심 12:00, 저녁 18:00~)</b>이고 예약 필수. 월·일 휴무."},
+  {ko:"이케다 센교",jp:"(酒)池田鮮魚 / Ikeda Sengyo",loc:"시안바시",s:{taste:9.4,value:9.3,rep:9.0,access:9.5,conv:7.6},badges:["QR 영어주문","눈앞에서 조리","현금 권장","목요휴무","★4.5·217"],why:"<b>오마카세 부담 없이 단품으로 스시를 즐길 최고의 선택</b>. 시안바시 술집 거리 1층이고 <b>QR 디지털 메뉴</b>라 언어 장벽이 없습니다. 눈앞에서 바로 쥐어 여러 점씩 한 번에 내줘 회전이 빠름. 참치 다진 것·연어 뱃살·수제 소시지가 호평이고 매실주 소다 추천이 많습니다. <b>2차·3차로 이어가기에도 좋은 위치</b>. 금·토는 자정까지, 목요일 휴무."},
+  {ko:"니기리노 하야시",jp:"握りのはやし / Nigiri no Hayashi",loc:"하야마",s:{taste:9.8,value:7.6,rep:9.5,access:5.8,conv:4.8},badges:["평점 4.9","나가사키 예약 최난","신규 입장 어려움","고가","★4.9·68"],why:"<b>나가사키에서 예약이 가장 어려운 스시야</b>(4.9). “생선 맛에 관한 한 그전에 먹은 모든 것을 의심하게 만든다”는 리뷰가 과장이 아닙니다. 셰프와 제자들이 스시 대회에 나가는 집. 장어 코스도 별도로 운영. 단 <b>신규 손님은 소개 없이 들어가기 어렵다</b>는 언급이 반복되고 시내에서 전차로 한참 올라가야 합니다. 월요일 휴무."},
+  {ko:"스시 캇포 사쿠라이",jp:"鮨・割烹 さくらい",loc:"하마구치마치",s:{taste:9.3,value:8.8,rep:8.8,access:7.4,conv:5.0},badges:["대형 스시야","아나고 호평","외국인 거절 리뷰","일요휴무","★4.6·325"],why:"평화공원 쪽 하마구치마치의 <b>규모 있는 스시야</b>로 1·2층을 씁니다. 사시미 오마카세와 <b>아나고(붕장어) 스시</b>가 특히 좋다는 평. 다만 <b>“빈 가게인데 만석이라며 외국인을 돌려보냈고, 일본어로 말하자 자리를 내줬다”는 리뷰가 올라와 있습니다</b>. 일본어가 전혀 안 되면 다른 집을 권합니다. 17시~자정, 일요일 휴무."},
+  {ko:"타마츠루미",jp:"玉鶴見 / Tamatsurumi (Hilton)",loc:"오노우에마치",s:{taste:9.2,value:7.0,rep:8.6,access:9.0,conv:8.6},badges:["힐튼 나가사키","스시·덴푸라·텟판","영어 가능","고가","★4.7·63"],why:"<b>나가사키역 바로 옆 힐튼 안</b>이라 도착·출발 날에 가장 쓰기 좋은 선택. 재료 대부분이 나가사키산이고 <b>스시·덴푸라·텟판야키를 한 곳에서</b> 고를 수 있습니다. 디너 코스 18,000엔, 점심 오마카세 10,000엔대로 비싼 편이고 “점심 코스는 세계 어디서나 먹을 수 있는 수준”이라는 평도 있으니 <b>텟판야키 쪽</b>이 만족도가 높습니다."},
+]},
+
+{cat:"사시미·해산물",jp:"刺身・海鮮",note:"나가사키는 <b>고래고기(쿠지라)와 키비나고(샛줄멸)</b> 같은 다른 지역에 없는 어종을 먹을 수 있는 곳입니다. 점심에는 <b>생선가게 직영 식당</b>이 압도적 가성비를 냅니다.",items:[
+  {ko:"하마나카 스이산",jp:"濱中水産(浜康) / Hamanaka Suisan",loc:"신다이쿠마치",s:{taste:9.4,value:9.9,rep:9.2,access:8.2,conv:4.8},badges:["사시미정식 880엔","생선가게 직영","점심 2시간만","목·일 휴무","★4.5·175"],why:"<b>가성비로는 이 가이드 전체 1등.</b> 생선가게 안쪽에 붙은 식당이라 <b>사시미 모둠 정식이 880엔</b>, 다른 메뉴는 550엔부터입니다. 밥은 무한 리필. “11시 전부터 줄이 선다”, “갈치 튀김 380엔이 예상의 두 배 크기였다”는 리뷰. 단 <b>11:00–13:00 두 시간만</b> 열고 목·일 휴무라 <b>12/5(토) 점심이 유일한 기회</b>입니다."},
+  {ko:"슌사이 코코로",jp:"旬彩 ここ路 / Shunsai Kokoro",loc:"아부라야마치",s:{taste:9.6,value:8.8,rep:9.0,access:9.4,conv:6.2},badges:["고토 출신 셰프","사시미 10종","예약권장","흡연 가능","★4.6·74"],why:"<b>고토열도 출신 셰프</b>가 운영하는 숨은 강자. 사시미 10종 모둠, <b>곰치 튀김, 말고기 사시미, 독특한 계란말이</b>가 추천 메뉴로 꼽히고 사시미 모둠에 쓴 조개껍데기로 끓여주는 된장국이 별미라는 리뷰가 반복됩니다. 나가사키 사케 셀렉션도 좋음. <b>실내 흡연 가능</b>이 유일한 단점이고 예약 권장."},
+  {ko:"우미토",jp:"海と / Umi to",loc:"시안바시",s:{taste:9.3,value:9.2,rep:8.8,access:9.5,conv:6.5},badges:["부부 운영","하토시 명물","현지인 추천","1인 4,000엔대","일요휴무","★4.5·41"],why:"시안바시 요코초를 걷다 <b>현지 아주머니가 “맛있는 집 알려줄게”라며 데려가 줬다</b>는 후기로 유명해진 집. 사시미 신선도가 나가사키 평균보다 확실히 위고, <b>하토시(새우살을 식빵에 끼워 튀긴 나가사키 명물)</b>가 간판입니다. 키비나고 사시미를 서비스로 내주기도. 술 포함 1인 4,000엔대. 시안바시역 도보 2분, 일요일 휴무."},
+  {ko:"코다 쇼쿠도",jp:"幸田食堂 / Koda Shokudo",loc:"도자마치",s:{taste:9.2,value:9.3,rep:8.8,access:9.5,conv:7.2},badges:["점심·저녁 모두","된장국 호평","로컬 분위기","일요휴무","★4.3·244"],why:"도자마치 2층의 <b>점심·저녁 다 되는 해산물 쇼쿠도</b>. “사시미가 놀랍도록 신선했고 <b>된장국이 인생 최고</b>였다”는 리뷰가 여러 개입니다. 고등어구이·가라아게도 평이 좋고 서빙이 빠릅니다. 가격 대비 만족도가 높아 혼자 가기도 편함. 점심 11:30–14:30 / 저녁 17:30–22:30, 일요일 휴무."},
+  {ko:"자코야 시안바시",jp:"雑魚屋 長崎思案橋店 / Zakoya",loc:"시안바시",s:{taste:9.0,value:8.8,rep:8.4,access:9.4,conv:7.6},badges:["오늘의 생선","머리로 국 끓여줌","코스 추천","주말 점심도","★3.9·576"],why:"<b>“오늘의 생선” 메뉴에서 고르면 사시미로 떠주고, 다 먹고 나면 머리와 꼬리로 된장국을 끓여줍니다.</b> 이 집의 정체성이자 가장 많이 추천되는 방식. 이와시(정어리) 덴푸라도 호평. 메뉴가 일본어뿐이라 구글 렌즈가 필요하지만 가격은 합리적입니다. 평일 17시~, <b>토·일은 12시부터</b> 열어 주말 점심에도 쓸 수 있습니다."},
+  {ko:"타이슈캇포 안라쿠시",jp:"大衆割烹 安楽子 / Anrakushi",loc:"하마마치",s:{taste:8.8,value:8.6,rep:8.4,access:9.5,conv:7.4},badges:["고래고기","16:30 오픈","등푸른생선","가격 편차","★3.9·248"],why:"시안바시·칸코도리 전차역 도보 5분의 <b>생선 전문 타이슈 이자카야</b>. <b>고래고기를 먹을 수 있는 몇 안 되는 집</b>으로, 추천을 물으면 셰프가 “비싸지만 잡내가 없다”며 꼬리살을 권합니다. 등푸른생선·흰살생선 모두 좋고 <b>16:30에 열어 이른 저녁</b>이 가능한 게 큰 장점. 다만 모둠 가격이 생각보다 나온다는 리뷰가 있으니 단품으로 주문하세요."},
+]},
+
+{cat:"이자카야 등 술집",jp:"居酒屋",note:"나가사키 술자리의 중심은 <b>시안바시(思案橋) 요코초</b>입니다. 좁은 골목에 작은 가게들이 빽빽하고, 대부분 <b>8~12석에 예약 필수</b>. 일요일 휴무가 많아 <b>12/6(일) 저녁</b>에는 영업 여부를 꼭 확인해야 합니다.",items:[
+  {ko:"코이소",jp:"小磯 / Koiso",loc:"시안바시",s:{taste:9.6,value:8.8,rep:9.2,access:9.4,conv:5.6},badges:["오반자이 카운터","현지인 추천 1픽","예약 필수","일요휴무","★4.5·184"],why:"좁은 골목 안쪽의 <b>시안바시 최고 평판 이자카야</b>. 카운터에 <b>교토식 오반자이(제철 반찬)가 쭉 늘어서 있어 보고 고르는 방식</b>이고, 간이 세지 않고 재료 본맛을 살리는 쪽이라 술이 계속 들어갑니다. 사시미 모둠에 <b>방어·고래</b> 같은 나가사키 어종이 들어가고 오리 가슴살 요리가 숨은 명물. “현지인이 대부분이고 예약은 필수”라는 리뷰가 반복됩니다. 일요일 휴무."},
+  {ko:"츠키마치 나가사키 요코초",jp:"つきまち長崎横丁",loc:"츠키마치",s:{taste:8.6,value:9.6,rep:8.8,access:9.5,conv:8.4},badges:["요코초 전체","센베로 세트","라이브 음악","월요휴무","★4.4·293"],why:"지하 전체가 <b>붉은 초롱으로 꾸며진 쇼와풍 요코초</b>. 한 집에서 끝내지 않고 여러 가게를 옮겨 다니며 마실 수 있어 <b>남자 둘 술자리로는 여기가 정답</b>입니다. <b>센베로(1,000엔에 술+안주) 세트</b>를 파는 집들이 있고, 생선을 평대에 깔아놓고 파는 쇼와식 시장 구역이 같이 있습니다. 라이브 음악도 종종. 월요일 휴무라 <b>12/7(월)엔 닫습니다</b>."},
+  {ko:"도하센",jp:"道八仙 / Douhassen",loc:"우와마치",s:{taste:8.8,value:9.2,rep:8.4,access:8.6,conv:6.8},badges:["주인장 인심","밀크셰이크","함바그","화요휴무","★4.0·309"],why:"“<b>주인이 소주를 서비스로 주더니 끝나고 현지 야타이까지 데려가 줬다</b>”는 리뷰가 이 집을 설명합니다. 할머니 집에 온 것 같은 분위기에 함바그 스테이크와 스파게티가 메인. <b>숟가락으로 떠먹는 나가사키식 밀크셰이크</b>도 여기서 제대로 나옵니다. 혼자 또는 둘이 가서 주인과 이야기하기 좋은 집. 화요일 휴무, 브레이크타임 있음."},
+  {ko:"바라몬 쇼쿠도",jp:"ばらもん食堂 / Baramon Shokudo",loc:"요로즈야마치",s:{taste:8.6,value:9.0,rep:8.2,access:9.4,conv:7.6},badges:["고토 요리","노미호다이 세트","저녁 정식도 됨","월·화 휴무","★4.1·360"],why:"고토열도 요리를 내세운 집으로 <b>아지(전갱이) 튀김과 말린 전갱이</b>가 간판. <b>3,980엔 코스 + 1,500엔 70분 노미호다이</b> 조합이 있어 예산을 잡고 마시기 좋습니다. 다만 리뷰 편차가 커서 “튀김은 좋은데 사시미·조림은 평범, 짠 메뉴가 있다”는 지적이 반복됩니다. <b>튀김·구이 위주로 시키는 게 정답</b>. 월·화 휴무."},
+  {ko:"슌사이 나가야",jp:"和食居酒屋 旬彩 ながや",loc:"요로즈야마치",s:{taste:9.0,value:8.6,rep:8.2,access:9.4,conv:6.0},badges:["나가사키규","시마아지 샤브샤브","외국인 응대 불만 리뷰","★4.3·173"],why:"호텔 직원 추천으로 가는 경우가 많은 <b>지역 식재료 중심 이자카야</b>. <b>나가사키규</b>와 코스의 시마아지(줄무늬전갱이) 샤브샤브가 특히 호평입니다. 이른 저녁부터 손님이 찹니다. 다만 <b>“외국인에게 비우호적이고 만석이라 둘러댄다”는 리뷰가 올라와 있어</b> 예약하고 가는 편이 안전합니다. 평일 점심도 운영."},
+  {ko:"이케다 센교",jp:"(酒)池田鮮魚 / Ikeda Sengyo",loc:"시안바시",s:{taste:9.4,value:9.3,rep:9.0,access:9.5,conv:7.6},badges:["스시+술 겸용","QR 영어주문","금·토 자정까지","목요휴무","★4.5·217"],why:"스시 카테고리에도 올라간 집이지만 <b>술자리 기준으로도 상위</b>입니다. QR 메뉴로 언어 걱정이 없고, 바텐더·셰프가 말을 많이 걸어주는 친근한 분위기. 눈앞에서 쥐어주는 스시에 매실주 소다를 곁들이는 조합이 가장 많이 추천됩니다. <b>계산도 QR로 처리</b>되지만 현금을 챙겨 가는 편이 안전합니다."},
+]},
+
+{cat:"야키토리",jp:"焼き鳥",note:"나가사키 야키토리는 <b>닭보다 돼지(부타바라)를 더 많이 굽는</b> 규슈 스타일이 섞여 있습니다. 상위권은 전부 <b>주인이 알아서 내주는 오마카세식</b>이라 배부르면 멈추라고 말하면 됩니다.",items:[
+  {ko:"야키토리 키타자와",jp:"焼鳥きたざわ / Yakitori Kitazawa",loc:"후나다이쿠마치",s:{taste:9.7,value:8.4,rep:9.2,access:9.4,conv:5.6},badges:["평점 4.8","지도리(토종닭)","오마카세식","월·일 휴무","표본 적음","★4.8·32"],why:"<b>나가사키 야키토리 최고 평점(4.8)</b>. 지도리(재래종 닭)만 쓰고 <b>주문 없이 준비된 꼬치를 차례로 내주다가 배부르면 멈추라고 하는 오마카세 방식</b>입니다. 시작 전에 못 먹는 것을 물어봐 줍니다. “겉은 제대로 그을렸는데 속은 촉촉, 한 점도 빠짐없이 완벽했다”는 리뷰. 영어는 거의 안 되지만 노력해줍니다. 가격대는 높은 편, 월·일 휴무."},
+  {ko:"야키토리 렌",jp:"焼鳥 れん / Yakitori Ren",loc:"도자마치",s:{taste:9.6,value:9.0,rep:9.0,access:9.5,conv:7.0},badges:["영어 안내지 제공","오마카세 5/7/10개","야키오니기리","수요휴무","★4.6·81"],why:"<b>외국인 대응이 가장 편한 상위 야키토리</b>. 메뉴가 밖에 안 붙어 있지만 들어가면 <b>영어 안내지</b>를 주고, 1라운드에 5개·7개·10개 중 고르면 알아서 내준 뒤 2라운드부터 직접 고르는 방식입니다. “인생 최고의 야키토리, 하나도 빠짐없이 완벽하게 구워졌다”는 리뷰가 여러 개. <b>마늘버터 야키오니기리</b>를 꼭 시키세요. 13석, 수요일 휴무."},
+  {ko:"야이토루켄",jp:"炭火串焼 やいとるけん",loc:"카지야마치",s:{taste:9.3,value:9.6,rep:9.0,access:9.2,conv:7.2},badges:["가격 최저","부타바라 간판","현지 가족 손님","흡연석 있음","월요휴무","★4.6·97"],why:"“<b>가격이 믿기지 않게 싼데 맛은 나가사키 최고의 숯불 꼬치집</b>”이라는 리뷰가 붙는 가성비 1위. <b>부타바라(삼겹살 꼬치)와 미소 부타바라, 가볍게 구운 모래집</b>이 추천 1순위입니다. 운젠햄 같은 지역 재료도 나옴. 수요일 밤에도 현지 가족들로 꽉 차는 진짜 동네 가게. 테이블석이 넓고 <b>실내 흡연 구역</b>이 있습니다. 월요일 휴무."},
+  {ko:"야키토리 토도로키",jp:"焼きとり -todoroki- 轟",loc:"후나다이쿠마치",s:{taste:9.4,value:9.5,rep:8.8,access:9.4,conv:6.6},badges:["부부 운영","영어 메뉴 있음","두부·돼지삼겹","월·일 휴무","표본 적음","★4.6·36"],why:"부부가 운영하는 작은 집인데 “<b>값은 싼데 일본에서 먹은 식사 중 손에 꼽힌다</b>”는 리뷰가 달립니다. <b>튀긴 두부와 돼지 삼겹살</b>이 꼭 시켜야 할 메뉴로 반복 언급되고, <b>영어 메뉴가 있습니다</b>. 가는 골목 분위기 자체가 좋다는 평. 금·토는 23:30까지, 월·일 휴무."},
+  {ko:"야키토리 부쇼몬",jp:"炭火やきとり武将門 / Bushomon",loc:"시안바시",s:{taste:8.6,value:9.0,rep:8.2,access:9.5,conv:7.8},badges:["영어 태블릿 주문","시안바시 골목","카드 불가","일요휴무","★4.1·178"],why:"시안바시 좁은 골목 안쪽의 <b>숨은 집인데 주문은 가장 쉬운</b> 곳. <b>영어 태블릿</b>으로 직접 찍어 주문하고 시킨 순서대로 나옵니다. 튀긴 치즈와 감자튀김 같은 안주류도 괜찮음. 다만 “<b>꼬치가 작은 편이고 일부 고기는 질겼다, 카드를 안 받는다</b>”는 리뷰가 있으니 현금을 챙기고 기대치는 중간으로. 실내 흡연 가능."},
+  {ko:"잇초잇제츠 시안바시",jp:"逸鳥逸舌 長崎思案橋店",loc:"하마마치",s:{taste:9.3,value:9.0,rep:9.0,access:9.5,conv:8.6},badges:["토·일 14시부터","숙성 규탄","해피아워","평점 4.6","온라인 예약"],why:"<b>12/6(일) 저녁에 확실히 열려 있는 상위권 야키토리.</b> 야키토리에 더해 <b>숙성 규탄(소혀)</b>을 내는 게 차별점이고 소금 간이 간장보다 평이 좋습니다. 토·일은 14:00부터, 평일은 17시부터 자정까지. <b>18시 전 해피아워</b>에 첫 잔이 싸고 노미호다이·코스도 있습니다. 온라인 예약 가능, 좌석에 칸막이가 있습니다."},
+  {ko:"히마야",jp:"日馬屋 / Himaya",loc:"도자마치",s:{taste:9.4,value:9.4,rep:8.8,access:9.5,conv:6.4},badges:["1,200엔 세트","생간·생염통","예약 권장","일요휴무","좌석 10석"],why:"야키토리와 <b>모츠(내장) 요리</b>를 같이 하는 작은 집. <b>생맥주+안주+꼬치 5개가 1,200엔</b>인 저녁 세트가 이 동네 최고 가성비입니다. <b>생간·생염통은 꺼낸 지 15분이 지나면 회수</b>할 만큼 신선도를 지키고 600엔. 카운터 10석에 안쪽 다다미방. 금방 만석이라 예약 권장, 일요일 휴무."},
+]},
+
+{cat:"라멘",jp:"ラーメン",note:"나가사키는 짬뽕의 도시라 <b>정통 라멘집 자체가 드뭅니다.</b> 대신 <b>토마토 라멘·레몬 라멘</b> 같은 다른 데 없는 변주가 강합니다. 짬뽕에 질렸을 때 쓰는 카드로 보세요.",items:[
+  {ko:"라멘 히이라기",jp:"らーめん 柊 / Ramen Hiiragi",loc:"도자마치",s:{taste:9.4,value:9.0,rep:9.2,access:9.5,conv:8.6},badges:["토마토라멘 명물","새벽 3–5시까지","리뷰 1,956","웨이팅 있음","★4.3·1,956"],why:"<b>나가사키에서 가장 화제가 된 라멘</b>. 토마토 베이스 국물에 <b>튀긴 가지</b>를 올리는데, 타바스코 같은 매콤한 끝맛과 가지가 놀랍도록 맞습니다. “다음 날 밤에 또 갔다”는 리뷰가 여러 개. 탄탄멘도 평이 좋습니다. <b>평일 새벽 3시, 금·토는 새벽 5시까지</b> 열어 술자리 마무리로 최적. 짠 편이라 카에다마(면 추가)를 처음부터 시키는 게 정석."},
+  {ko:"멘야 올웨이즈",jp:"麺屋 Always / Menya Always",loc:"요로즈야마치",s:{taste:9.3,value:9.0,rep:9.0,access:9.4,conv:7.8},badges:["레몬라멘","츠케멘(품절 잦음)","하카타계","수요휴무","★4.4·967"],why:"<b>레몬 라멘</b>이라는 간판 메뉴 하나로 설명되는 집. 하카타식 진한 국물에 생레몬을 띄워 느끼함을 잘라내는데, “국물을 끝까지 다 마셨다”는 리뷰가 반복됩니다. 쿠루메·등지방 라멘 등 정통 라인도 탄탄함. <b>츠케멘은 자주 품절</b>이니 일찍 가세요. 식권기 주문, 수요일 휴무."},
+  {ko:"노기 추카소바텐",jp:"ノギ中華そば店 / Nogi Chukasoba",loc:"도자마치",s:{taste:9.5,value:9.2,rep:8.8,access:9.5,conv:4.6},badges:["쇼유라멘 정수","주 4일·점심만","이름 적고 대기","1인 운영","★4.3·191"],why:"<b>짬뽕의 도시에서 제대로 된 쇼유 라멘을 만날 수 있는 거의 유일한 집.</b> 아고(날치)와 니보시 다시가 제대로 잡힌 국물에 차슈가 절품이라는 평가. 주인 혼자 운영해 회전이 느립니다. <b>가게 앞 장부에 이름을 적으면 주인이 입장 시간을 적어주는 방식</b>. <b>목~일 10:00–14:00만</b> 열어 12/5(토)·12/6(일) 점심에만 가능합니다."},
+  {ko:"라멘 쇼",jp:"らーめん 笑 SYOU",loc:"조에이마치",s:{taste:9.1,value:9.6,rep:8.6,access:6.8,conv:5.2},badges:["정통 돈코츠","초저가","평일 점심만","주말 휴무","★4.4·340"],why:"<b>변주 말고 정통 돈코츠</b>가 먹고 싶을 때. 기름지지 않은 국물에 가는 면, 가격은 나가사키 평균보다 확실히 쌉니다. “싸고 깨끗하고 맛있다”는 단순명쾌한 리뷰들. 다만 시내에서 전차로 올라가야 하고 <b>평일 11–14시만, 토·일 휴무</b>라 이번 주말 일정엔 사실상 못 갑니다 — 참고용."},
+]},
+
+{cat:"돈까스",jp:"とんかつ",note:"나가사키 돈까스는 <b>밥·된장국·양배추 무한 리필</b>이 기본인 집이 많습니다. 토루코라이스에도 돈까스가 들어가니 <b>한 여행에 둘 다 먹으면 겹칩니다</b> — 하나만 고르세요.",items:[
+  {ko:"카츠시카",jp:"かつしか / Katsushika",loc:"신치중화가",s:{taste:9.6,value:9.3,rep:9.3,access:9.6,conv:7.2},badges:["나가사키 돈까스 1위","매일 영업","밥·국·양배추 리필","좌석 적음","★4.6·708"],why:"<b>나가사키 돈까스의 기준점</b>(4.6·708). 중화가 바로 맞은편이라 짬뽕 줄이 길 때 대안으로도 완벽합니다. 안심 한 장도 좋지만 <b>등심(로스)이 하이라이트</b>. 중간 사이즈(1,850엔)가 큰 사이즈보다 가성비가 낫다는 리뷰가 많습니다. <b>밥·된장국·양배추 무한 리필</b>이고 반찬을 먼저 내줘 기다리기 편함. 테이블 6개뿐이라 운이 필요하고, 영어는 안 됩니다. <b>매일 11:30–21:00</b>."},
+  {ko:"쿠로부타도리 로쿠하쿠",jp:"黒豚通り六白 長崎眼鏡橋店",loc:"긴야마치",s:{taste:9.5,value:9.0,rep:8.8,access:9.4,conv:6.8},badges:["가고시마 흑돼지","샤브샤브도","평점 4.7","화요휴무","★4.7·42"],why:"하마노마치 아케이드를 지나 메가네바시 쪽으로 내려가면 나오는 <b>흑돼지 전문점</b>(4.7). 등심카츠가 부드럽고 지방이 달다는 평이 일관됩니다. <b>흑돼지 샤브샤브</b>도 “인생 최고”라는 리뷰가 있어 둘이 가면 하나씩 시키기 좋습니다. 점심엔 20~30분 대기. 화요일 휴무, 저녁은 22시까지."},
+  {ko:"톤카츠 그랑듀 루캉",jp:"とんかつ グランデュ ルカン",loc:"카츠야마마치",s:{taste:9.4,value:9.2,rep:8.6,access:9.0,conv:7.4},badges:["여사장 경영","히레카츠·시소말이","해산물튀김","일요휴무","★4.4·189"],why:"오래 해 온 여사장이 혼자 튀기는 집. “<b>사진으로 이 돈까스가 얼마나 좋은지 설명이 안 된다</b>”는 리뷰가 붙습니다. 히레카츠와 <b>차조기(시소) 말이 돈까스</b>가 간판이고 <b>해산물 튀김과 타르타르 소스</b>도 호평. 반찬 하나하나가 좋다는 평이 많습니다. 저녁에도 한산한 편이라 예약 없이 가기 좋음. 일요일 휴무."},
+  {ko:"분지로 아사히마치",jp:"文治郎 旭町店 / Bunjiro",loc:"아사히마치",s:{taste:9.3,value:8.6,rep:9.0,access:7.6,conv:7.8},badges:["미디엄레어 선택","리필 가능","좌식석 있음","가격 다소 높음","★4.4·670"],why:"나가사키 돈까스 체인 중 가장 평이 좋은 <b>분지로</b>의 본점 격. <b>미디엄레어와 웰던을 고를 수 있고</b>, 웰던도 젓가락으로 잘릴 만큼 부드럽다는 리뷰가 일관됩니다. 밥·된장국·양배추 리필. 다만 “도쿄에서 반값에 이만한 걸 먹었다”는 가격 불만 리뷰가 있어 가성비는 카츠시카가 위. 일부 좌석은 좌식입니다."},
+  {ko:"분지로 하마구치점",jp:"文治郎 浜口店 / Bunjiro",loc:"하마구치마치",s:{taste:9.3,value:8.8,rep:8.8,access:7.4,conv:8.2},badges:["평화공원 동선","영어 응대 가능","포션 큼","매일 영업","★4.3·435"],why:"<b>평화공원·원폭자료관을 보고 내려오는 길</b>에 있는 지점. 황금빛으로 튀긴 껍질과 젓가락으로 잘리는 고기, 밥·양배추 리필까지 본점과 동일하고 <b>영어 응대가 된다</b>는 리뷰가 있어 외국인에게 더 편합니다. 목요일 17시쯤 가면 한산. 매일 영업이라 일정 짜기 좋음."},
+]},
+
+{cat:"교자",jp:"餃子",note:"나가사키 교자는 <b>한 입 크기(히토쿠치 교자)</b>가 주류입니다. 20개를 시켜도 부담이 없어요. 대부분 작은 가게라 <b>재료가 떨어지면 일찍 닫습니다</b>.",items:[
+  {ko:"운류테이 교자 하마노마치",jp:"雲龍亭 浜町店 / Unryutei",loc:"하마마치",s:{taste:9.5,value:9.4,rep:9.0,access:9.6,conv:6.0},badges:["한입교자 원조급","부추 간 오믈렛","10석 미만","재료 소진 마감","월요휴무","★4.3·310"],why:"<b>나가사키 한입교자의 대표</b>. “일단 20개로 시작하라”, “교자가 나오자마자 한 접시 더 시켜라”는 리뷰가 정석 공략법입니다. 그리고 <b>간과 부추를 넣은 오믈렛(레바니라타마)이 교자만큼 유명</b>해서 “인생 최고의 오믈렛”이라는 평까지 있습니다. 생맥주와의 조합이 핵심. <b>좌석이 10석 미만이고 마감 2시간 전이면 교자가 떨어집니다</b> — 14:30 오픈 직후를 노리세요. 월요일 휴무."},
+  {ko:"호운테이 토리후쿠",jp:"宝雲亭 本店 とりふく / Hountei",loc:"도자마치",s:{taste:9.3,value:9.4,rep:8.8,access:9.5,conv:6.4},badges:["한입교자 노포","군만두+물만두","활기참","수·일 휴무","★4.2·533"],why:"가게 이름대로 <b>한 입에 들어가는 크기</b>의 교자. 얇고 바삭한 피를 깨물면 고기와 쪽파가 터지는데 <b>기름기가 거의 없어 가볍습니다</b>. 군만두와 물만두 둘 다 좋고 <b>파 올린 계란 프라이</b>가 사이드 명물(다만 비싸다는 평도 있음). 주인이 손님마다 말을 걸어주는 활기찬 분위기. <b>저녁 17:30부터만</b>, 수·일 휴무."},
+  {ko:"교자 만토쿠",jp:"餃子の店 万徳 / Mantoku",loc:"도자마치",s:{taste:9.3,value:9.4,rep:8.8,access:9.6,conv:6.6},badges:["가족 경영","마파두부 호평","금방 만석","일요휴무","★4.3·304"],why:"가족이 운영하는 <b>아담하고 분위기 좋은 집</b>. 주문이 들어가면 그때 빚는 교자라 고기 비율이 높고 육즙이 많습니다. <b>마파두부(순한 맛도 꽤 맵습니다)</b>와 튀긴 새우가 함께 호평. 맥주도 좋음. “갔을 때 한 테이블만 차 있었는데 10분 만에 만석이 됐다”는 리뷰 — <b>오픈 직후에 가세요</b>. 11:30–13:20 / 17:30–20:20, 일요일 휴무."},
+  {ko:"리카엔 부타만 교자",jp:"利華園 豚まん 餃子 / Rikaen",loc:"스와마치",s:{taste:9.2,value:9.5,rep:8.4,access:8.8,conv:6.0},badges:["테이크아웃 전문","수제 부타만","평점 4.6","좌석 없음","일요휴무","★4.6·47"],why:"<b>앉아서 먹을 수 없는 포장 전문 가게</b>. 그래서 리뷰 수는 적지만 평점은 4.6입니다. 수제 교자는 가볍고 속이 꽉 찼고 <b>부타만(고기만두)이 기름지지 않고 폭신</b>하다는 평. 주문하면 군만두를 바로 구워주거나 데워줍니다. 메가네바시·스와신사 산책 중 <b>길거리 간식</b>으로 최적. 옆에 작은 벤치가 있습니다. 11:00–18:30, 일요일 휴무."},
+]},
+
+{cat:"고토 우동",jp:"五島うどん",note:"<b>일본 3대 우동</b>으로 꼽히는데 사누키보다 훨씬 덜 알려져 있습니다. 동백기름을 발라 뽑아 <b>면이 가늘고 쫄깃</b>하고, 국물은 <b>아고다시(날치 육수)</b>라 맑고 깊습니다. 짬뽕·토루코라이스로 무거워진 속을 풀기에 가장 좋은 선택.",items:[
+  {ko:"고토우동 츠바키야",jp:"五島うどんと酒と肴 椿屋",loc:"히가시야마테",s:{taste:9.5,value:9.2,rep:9.0,access:8.4,conv:6.4},badges:["우동+술 겸용","와규 밥·오징어 덴푸라","매일 영업","예약권장","★4.3·140"],why:"<b>우동집이면서 제대로 된 술집</b>이라 남자 둘 저녁으로 가장 잘 맞습니다. “생굴·사시미·<b>와규 덮밥</b>·오징어 덴푸라 우동까지 계속 시키게 됐다”는 리뷰가 대표적. 일요일 저녁에 한 시간 기다릴 만큼 붐비니 예약하거나 바닷가 산책으로 시간을 보내세요. 주문이 어려우면 단골들이 거들어 줍니다. <b>매일 17:30–22:00</b>."},
+  {ko:"고토우동 시마야",jp:"五島うどん しまや / Shimaya",loc:"하마구치마치",s:{taste:9.4,value:9.3,rep:8.8,access:7.4,conv:7.0},badges:["저녁~새벽 2시","우엉 덴푸라","면 평가 최상","일요휴무","★4.4·155"],why:"고토 우동만 파고든 집으로 <b>면 자체 평가는 이 카테고리 최고</b>. “나가사키와 고토에서 먹은 우동 중 가장 좋았다”, “면이 알덴테에 탱글탱글했다”는 평. <b>우엉 덴푸라 우동</b>과 달걀 우동이 기본 조합입니다. 국물이 맑고 달걀을 풀면 질감이 바뀌는 재미. <b>18:00–새벽 2:00</b>로 늦게까지 해 술 마신 뒤 마무리로도 좋습니다. 일요일 휴무."},
+  {ko:"데지마 오타세이멘",jp:"出島 おたせいめん / Dejima Otaseimen",loc:"데지마워프",s:{taste:9.2,value:8.8,rep:8.6,access:9.0,conv:8.2},badges:["항구 노을뷰","지고쿠다키","영어 메뉴","와인 무한리필","화요휴무","★4.2·134"],why:"<b>데지마워프 1층, 나가사키 항이 보이는 자리</b>. 고토 출신 주인이 동백기름 면을 씁니다. 간판은 <b>지고쿠다키(끓는 냄비에서 바로 건져 아고다시나 계란 소스에 찍어 먹는 방식, 1,200엔)</b>. <b>영어 메뉴가 있고</b> 일부 직원은 영어가 유창합니다. “와인 무한리필이 말도 안 되는 가성비”라는 리뷰도. <b>해 질 무렵에 가세요</b>. 화요일 휴무."},
+  {ko:"다시본즈",jp:"だしぼんず / Dashibonzu",loc:"하마마치",s:{taste:9.0,value:9.2,rep:8.6,access:9.6,conv:8.4},badges:["아케이드 안","나가사키규 사이드","22시까지","월요휴무","★4.1·492"],why:"하마노마치 아케이드 한복판이라 <b>접근성은 이 카테고리 1위</b>. 우엉 덴푸라 우동이 간판이고 <b>나가사키 와규</b>와 미니 돈부리를 사이드로 붙일 수 있습니다. 토리텐(닭 덴푸라)도 지역 명물. 11–15시/17–22시로 <b>늦게까지 해 도착 첫날 저녁에 쓰기 좋음</b>. 메뉴는 일본어지만 사진이 있습니다. 월요일 휴무."},
+  {ko:"다시본즈 카모메이치바점",jp:"だしぼんず かもめ市場店",loc:"나가사키역",s:{taste:8.4,value:8.8,rep:8.0,access:9.6,conv:9.2},badges:["나가사키역 직결","10–22시","공항 가기 전","평가 편차","★3.6·212"],why:"<b>나가사키역에 붙은 카모메 시장 안</b>이라 12/7(월) 공항 가기 전 마지막 식사로 가장 현실적인 선택. 니쿠 우동과 덴푸라 튀김 조각을 올려 먹는 방식이 좋고, 차가운 츠케 우동 세트도 있습니다. 다만 “덴동이 눅눅하고 기름이 오래된 느낌”이라는 리뷰가 있어 <b>튀김보다 우동 위주로</b> 시키세요. 10:00–22:00."},
+]},
+
+{cat:"카스테라·카페",jp:"カステラ・喫茶",note:"<b>카스테라 3대 노포는 후쿠사야 · 분메이도 · 쇼오켄(마츠오켄).</b> 셋 다 두 조각짜리 미니 박스를 팔아 비교 시식이 가능합니다. 선물용은 유통기한이 2주 정도니 마지막 날 역에서 사도 됩니다.",items:[
+  {ko:"후지오",jp:"冨士男 / Fujio",loc:"카지야마치",s:{taste:9.5,value:8.8,rep:9.2,access:9.4,conv:6.2},badges:["100년 킷사텐","계란 샌드위치","현금만","목요휴무","★4.4·706"],why:"<b>100년 된 킷사텐</b>으로, 카스테라가 아니라 <b>샌드위치와 커피로 가는 곳</b>입니다. “<b>계란 샌드위치는 와사비를 넣어 시켜라</b>”는 리뷰가 반복되고 과일 샌드도 유명. 작은 찻잔에 내주는 홍차와 진한 커피, 쇼와 시대 그대로인 공간. 15시쯤 가면 20분 대기. <b>현금만</b>, 목요일 휴무, 9:30–17:00."},
+  {ko:"쇼오켄 본점",jp:"松翁軒 本店 / Shooken",loc:"우오노마치",s:{taste:9.3,value:8.4,rep:9.2,access:9.0,conv:7.8},badges:["3대 노포","2층 카페 병설","레몬 카스테라","매일 9–18시","★4.5·1,116"],why:"<b>카스테라 3대 노포 중 평점이 가장 높은 집</b>(4.5). 달걀 노른자를 늘리고 흰자를 줄인 <b>고산야키(五三焼)</b>가 간판이고 초콜릿 카스테라도 평이 좋습니다. 바닥에 굵은 설탕이 깔려 씹히는 식감이 특징. <b>2층 카페(세비야)에서 바로 앉아 먹을 수 있는 게 가장 큰 장점</b>이고 이 지점 한정 레몬 케이크가 있습니다. 응대가 극진하기로 유명."},
+  {ko:"후쿠사야 본점",jp:"福砂屋 本店 / Fukusaya",loc:"후나다이쿠마치",s:{taste:9.0,value:8.0,rep:9.5,access:9.2,conv:7.4},badges:["1624년 창업","카스테라 원조","앉을 곳 없음","17시 마감","★4.4·1,671"],why:"<b>1624년 창업, 카스테라의 원조</b>. 고풍스러운 본점 건물 자체가 볼거리이고 옆 파출소도 사진 명소입니다. 다만 <b>시식이 없고 17시에 닫으며</b>, “맛있지만 결국 스펀지 케이크인데 마트의 4배 값”이라는 솔직한 리뷰도 있습니다. <b>두 조각 미니 박스</b>가 있어 비교 시식용으로 사기 좋음. 건포도 버전은 호불호가 갈립니다."},
+  {ko:"분메이도 소혼텐",jp:"文明堂総本店 / Bunmeido",loc:"에도마치",s:{taste:9.1,value:8.6,rep:9.0,access:9.0,conv:7.8},badges:["가장 안 달다","말차·커피 맛","선물용 포장","매일 9–18시","★4.4·611"],why:"세 곳을 다 먹어본 사람들이 “<b>후쿠사야·쇼오켄보다 가볍고 덜 달아서 선물용으로 이걸 골랐다</b>”고 하는 집. 한 조각씩 도라야키 느낌의 종이에 싸여 나옵니다. 말차·커피 맛이 있어 고르는 재미가 있고 <b>포장을 예쁘게 해줍니다</b>. 바로 옆이 에도비시(짬뽕)라 묶어서 들르기 좋음."},
+  {ko:"카페 세비야",jp:"喫茶 セビリヤ / Cafe Sevilla",loc:"우오노마치",s:{taste:9.0,value:8.6,rep:8.6,access:9.0,conv:7.2},badges:["쇼오켄 2층","카스테라 세트 1,045엔","커피 호평","좌석 적음","★4.3·213"],why:"쇼오켄 본점 2층의 <b>스페인풍 카페</b>. <b>카스테라 세트(플레인+초콜릿 두 조각 + 음료 1,045엔)</b>로 비교 시식하기에 가장 깔끔한 방법입니다. “이번 일본 여행에서 마신 커피 중 단연 최고”라는 리뷰가 있을 만큼 커피 자체도 좋고, 수집품이 가득해 작은 박물관 같은 공간. 10:00–17:00, 좌석이 적습니다."},
+  {ko:"분분",jp:"ぶんぶん / Bunbun",loc:"카고마치",s:{taste:9.0,value:9.8,rep:8.6,access:9.2,conv:6.0},badges:["조식 세트 500엔","할머니 1인 운영","10석","일요휴무","★4.7·45"],why:"중화가 근처의 <b>50년 전으로 돌아간 듯한 10석짜리 카페</b>(4.7). <b>토스트+계란+샐러드+음료 조식 세트가 500엔</b>이라는 가격이 비현실적입니다. 할머니 혼자 운영해 느긋하게 기다려야 하고 손님은 전부 단골 현지인. <b>조식 세트는 11시 전까지만</b>이고 그 뒤엔 단품만 됩니다. 밀크셰이크도 평이 좋음. 9:00–17:00, 일요일 휴무."},
+  {ko:"쇼오켄 카모메이치바점",jp:"松翁軒 長崎街道かもめ市場店",loc:"나가사키역",s:{taste:9.1,value:8.4,rep:8.4,access:9.6,conv:9.4},badges:["나가사키역 직결","20시까지","선물 포장","★4.4·52"],why:"<b>나가사키역 카모메 시장 안</b>이라 <b>12/7(월) 돌아가는 날 선물 사기엔 여기가 정답</b>. 8:30–20:00으로 가장 길게 열고 본점과 같은 고산야키·초콜릿 카스테라를 팝니다. 직원이 포장과 고르기를 잘 도와준다는 평. 본점까지 갈 시간이 없을 때의 대안이자, 짐을 미리 안 들고 다녀도 되는 장점."},
+  {ko:"킷사 미나미야마테 8반칸",jp:"喫茶 南山手八番館",loc:"글로버가든 앞",s:{taste:9.4,value:9.3,rep:9.0,access:8.2,conv:7.4},badges:["평점 4.8","카스테라 아이스크림","글로버가든 도보 1분","수요휴무","15:30 마감"],why:"<b>글로버 정원 출구 바로 앞</b>에 있는 작은 킷사텐(4.8). 간판은 <b>카스테라 사이에 아이스크림을 끼운 ‘카스테라 아이스’</b>와 바쿠마츠 커피입니다. 여주인이 직접 만든 케이크를 내고, 할아버지에게 물려받은 골동 찻잔의 내력을 들려줍니다. <b>12/5 글로버 정원에서 내려온 직후(16시 전)</b>에 딱 맞는 자리. 수요일 휴무, 10:00–15:30."},
+  {ko:"히가시야마테 13번관",jp:"東山手十三番館",loc:"오란다자카",s:{taste:9.0,value:9.6,rep:8.8,access:8.0,conv:7.6},badges:["오란다자카 중턱","카스테라 세트 550엔","테라스석","월요휴무","16시 마감"],why:"<b>일정의 오란다자카(13:45) 코스 한복판</b>에 있는 양관 카페. 1890년대 서양식 건물 1층이고 2층은 무료 개방입니다. <b>카스테라+홍차 세트가 550엔</b>, 커피·홍차는 300엔. 테이블 간격이 넓고 테라스가 있어 언덕을 올라온 뒤 쉬기에 최적입니다. 월요일 휴무, 10:00–16:00."},
+  {ko:"마루산카쿠시카쿠",jp:"まるさんかくしかく",loc:"메가네바시",s:{taste:9.5,value:9.2,rep:9.0,access:9.3,conv:7.4},badges:["평점 4.9","핸드드립 전문","메가네바시 도보 1분","매일 영업","촬영 불가"],why:"<b>메가네바시 바로 옆, 나가사키 카페 평점 1위(4.9)</b>. 세계 각지 원두와 홍차를 갖춘 전문점으로 주인이 취향을 물어 골라줍니다. 전통 도구로 내리는 핸드드립이 간판이고 홍차 350엔부터. <b>12:45 메가네바시 일정과 그대로 붙습니다.</b> 매일 10:30–19:00. 실내 촬영은 금지."},
+  {ko:"애틱 커피 메가네바시",jp:"ATTIC COFFEE MEGANEBASHI",loc:"스와마치",s:{taste:8.8,value:8.8,rep:8.4,access:9.3,conv:8.4},badges:["메가네바시 뷰","레몬 케이크","20시까지","수요휴무"],why:"메가네바시가 내다보이는 창가 자리가 있는 모던 카페. <b>레몬 케이크</b>가 추천 1순위이고 원두도 판매합니다. 좌석이 많지 않지만 <b>20시까지 열어</b> 마루산카쿠시카쿠가 닫힌 뒤의 대안. 위생 지적 리뷰가 한 건 있으니 참고하세요. 수요일 휴무."},
+]},
+
+{cat:"바·위스키",jp:"バー",note:"의외의 강점 구역. 나가사키는 <b>개항장 시절부터 바 문화가 있던 도시</b>라 <b>30~50년 된 오센틱 바</b>가 시안바시 일대에 몰려 있습니다. 대부분 20시~새벽 2시, <b>일요일 휴무</b>.",items:[
+  {ko:"바 나카노",jp:"Bar NAKANO",loc:"시안바시",s:{taste:9.6,value:9.0,rep:9.0,access:9.6,conv:6.8},badges:["평점 4.9","20년 이상 단골","진토닉 추천","좌석 적음","표본 적음","★4.9·10"],why:"<b>시안바시 전차역 도보 2분</b>, 좌석이 적어 숨은 아지트 같은 바. “<b>진토닉은 꼭 마셔봐야 한다</b>”는 추천이 반복되고, 취향을 말하면 마스터가 알맞은 칵테일을 만들어 줍니다. “14년 전 처음 왔는데 나도 마스터도 나이를 먹었다”는 리뷰가 이 집의 성격을 보여줍니다. 차분하고 따뜻한 분위기. 일요일은 자정까지."},
+  {ko:"바 나가타",jp:"Bar Nagata",loc:"도자마치",s:{taste:9.5,value:8.8,rep:9.2,access:9.5,conv:7.2},badges:["평점 4.8","나가사키 테마 칵테일","군함도·차이니즈문","일요휴무","★4.8·52"],why:"<b>이 가이드에서 가장 추천하고 싶은 바.</b> 시그니처 칵테일들이 <b>나가사키의 역사와 랜드마크에서 영감</b>을 받아 만들어졌습니다. <b>‘군함도(The Gunkanjima)’</b>는 스카치와 커피 리큐어로 스모키한 끝맛을 내 군함도를 표현하고, <b>‘차이니즈 문’</b>은 중화가를 담습니다. 평화공원을 보고 온 날 조용히 위스키 한 잔 하기에 분위기가 딱. 마스터가 번역 앱으로 성심껏 설명해 줍니다. 20:00–새벽 2:00."},
+  {ko:"램프라이터",jp:"ランプライター / Lamplighter",loc:"카지야마치",s:{taste:9.4,value:9.0,rep:9.0,access:9.3,conv:8.2},badges:["평점 4.7","재즈","시가 가능","매일 영업","★4.7·47"],why:"<b>위스키 라인업이 가장 두터운 집</b>이고 클래식 칵테일 기술도 탄탄합니다. 재즈가 흐르고 마스터의 아버지가 모은 트레이와 손님들이 준 코스터로 벽이 가득 찬 <b>옛 시대로 걸어 들어간 듯한 인테리어</b>. 겉보기엔 들어가기 어려워 보이지만 안에 들어가면 전혀 부담스럽지 않고 가격도 합리적이라는 리뷰가 반복됩니다. <b>시가 가능</b>, 매일 영업."},
+  {ko:"빅터",jp:"Victor",loc:"시안바시",s:{taste:9.3,value:8.8,rep:8.8,access:9.5,conv:7.4},badges:["30년 마스터","마술 쇼","돌 카운터","일요휴무","★4.7·65"],why:"마스터가 <b>30년 넘게 혼자 지켜온 바</b>. 돌로 만든 긴 카운터에 앉으면 <b>마술을 보여주는 것</b>으로 유명합니다. “일본에서 간 바 중 최고, 바텐더가 대단히 솜씨 있다”, “사람이 적어서 한 모금 한 모금을 즐길 수 있다”는 리뷰. 주변 거리는 좀 어수선해 보여도 가게 안은 전혀 다릅니다. 영어는 제한적. 20:00–새벽 2:00, 일요일 휴무."},
+  {ko:"바 스트랜드",jp:"バー・ストランド / Bar Strand",loc:"시안바시",s:{taste:9.3,value:8.4,rep:8.6,access:9.4,conv:7.2},badges:["바텐더 2인","네그로니·블러디메리","가격 높은 편","일요휴무","★4.4·47"],why:"바텐더 두 명이 지키는 <b>정통파 칵테일 바</b>. “<b>인생에서 이렇게 호사스러운 블러디메리와 네그로니를 마셔본 적이 없다</b>”는 리뷰가 대표적입니다. 제철 재료를 쓴 킨칸(금귤)·휴가나츠 칵테일이 좋고, 미소에 절인 치즈가 안주로 나옵니다. <b>가격은 퀄리티에 맞게 높은 편</b>. 19:00–새벽 2:00, 일요일 휴무."},
+]},
+
+{cat:"기타 그외",jp:"定食・バーガー・和牛",note:"백반·버거·야키니쿠를 모았습니다. 나가사키는 <b>사세보 버거</b>의 영향권이라 햄버거 수준이 지방 도시치고 상당히 높습니다.",items:[
+  {ko:"칸자키 쇼쿠도",jp:"神崎食堂 / Kanzaki Shokudo",loc:"스와마치",s:{taste:9.3,value:9.5,rep:8.6,access:9.0,conv:8.0},badges:["노부부 운영","생강구이 정식","고양이 있음","11:30–19:30 통영업","★4.3·158"],why:"“<b>인생에서 먹어본 최고의 생강구이(쇼가야키)였다 — 신의 경지</b>”라는 리뷰가 달린 동네 백반집. 노부부가 운영하고 가게 고양이가 있습니다. 메뉴가 전부 일본어지만 주문을 친절하게 도와주고, 종이학을 접어주기도 한다는 후기. <b>브레이크타임 없이 11:30–19:30 통으로 열어</b> 애매한 시간에 밥 먹기 가장 좋습니다. 스와신사·메가네바시 동선."},
+  {ko:"코코 버거스",jp:"CoCo Burgers & Sports Bar",loc:"후루카와마치",s:{taste:9.5,value:9.3,rep:9.0,access:9.3,conv:8.2},badges:["평점 4.9","메가네바시 도보","스포츠바 겸용","목요 저녁 휴무","★4.9·108"],why:"<b>나가사키 버거 평점 1위(4.9)</b>. “나가사키 최고의 버거집”, “어디서 먹어본 것과 비교해도 최고”라는 리뷰가 줄줄이 달립니다. 패티·번·감자튀김의 밸런스가 좋고 가격이 합리적이며 서빙이 빠릅니다. <b>메가네바시 바로 근처</b>라 관광과 묶기 좋고 스포츠바를 겸해 저녁에 맥주 마시기도 좋음. 목요일은 점심만."},
+  {ko:"로지 카페",jp:"路地カフェ / Roji Cafe",loc:"야나가와마치",s:{taste:9.4,value:9.2,rep:8.8,access:7.6,conv:7.4},badges:["평점 4.9","와사비 버거","로프웨이 도보 7분","목요휴무","★4.9·87"],why:"<b>이나사야마 로프웨이에서 도보 7분</b>이라 <b>야경 보러 올라가기 전 저녁</b>으로 동선이 완벽합니다(4.9). <b>와사비 버거</b>가 시그니처이고 번이 아주 가볍다는 평. 15시 넘어서도 열어 애매한 시간에 끼니를 해결할 수 있는 몇 안 되는 집입니다. 딸기 소다도 추천. 11:00–19:00, 목요일 휴무."},
+  {ko:"더 스탠드 힐",jp:"the STAND HILL",loc:"요로즈야마치",s:{taste:9.3,value:9.0,rep:8.8,access:9.5,conv:8.6},badges:["사세보 스타일","와규 더블","주말 통영업","브런치도","★4.5·203"],why:"<b>사세보 버거 스타일</b>을 제대로 내는 집으로, 시내 한복판이라 접근성이 가장 좋습니다. “먹어본 버거 중 최고 — 패티가 육즙이 가득하고 번이 폭신하다”는 리뷰. <b>와규 더블 버거</b>가 간판이고 사이드는 프렌치프라이가 아니라 웨지 감자입니다. <b>토·일은 11–21시 통영업</b>이라 애매한 시간에 가장 쓸모 있음."},
+  {ko:"나가사키 와규 야키니쿠 퓨어",jp:"長崎和牛 焼肉 PURE",loc:"신치중화가",s:{taste:9.3,value:8.4,rep:8.8,access:9.6,conv:8.4},badges:["나가사키 와규","영어 태블릿","점심 세트 저렴","예약권장","★4.5·525"],why:"<b>나가사키에서 와규를 구워 먹을 가장 확실한 선택</b>. 중화가 입구에 있어 접근성이 최고이고 <b>아이패드 영어 주문</b>이라 언어 문제가 없습니다. 2인 그랜드 디너 세트로 시작해 단품을 추가하는 방식이 정석이고, <b>등심(로인) 평이 갈비보다 확실히 좋습니다</b>. <b>점심 세트가 상당히 저렴</b>하니 예산이 빠듯하면 점심을 노리세요. 저녁은 예약 없으면 거절당할 수 있음."},
+  {ko:"베이스",jp:"Base",loc:"아부라야마치",s:{taste:9.2,value:9.0,rep:8.4,access:9.4,conv:7.2},badges:["시안바시 3층","데리타마 베이컨","모히토·와플","금·토 자정까지","목요휴무","★4.5·88"],why:"시안바시 빌딩 3층의 <b>숨은 버거 바</b>. “일본에 4년 살며 먹은 버거 중 최고 — <b>데리타마 베이컨</b>을 시키고 나중에 고맙다고 해라”라는 리뷰가 상징적입니다. 모히토 같은 칵테일과 와플 디저트도 있어 <b>저녁 술자리 1차로도 가능</b>. 금·토는 자정까지 열어 야식으로도 좋습니다. 목요일 휴무."},
+  {ko:"키친 마사",jp:"キッチン まさ / Kitchen Masa",loc:"고토마치",s:{taste:9.0,value:9.6,rep:8.6,access:9.0,conv:7.0},badges:["식권기 주문","포션 거대","현지 직장인","일요휴무","★4.1·517"],why:"<b>가게 밖 식권기에서 먼저 뽑고 들어가는 방식</b>(사진이 옆에 붙어 있음). 포션이 어마어마해서 탄수화물을 줄이려면 밥 적게를 미리 요청하세요. 주인이 한 그릇씩 따로 조리하고 매번 냄비를 씻는 꼼꼼함. 생맥주 550엔. <b>영어는 안 되지만 외국인이라고 어색하게 대하지 않는다</b>는 평이 많습니다. 11–15시/17–21시, 일요일 휴무."},
+  {ko:"집소",jp:"gypso",loc:"고토마치",s:{taste:9.3,value:9.2,rep:8.8,access:9.0,conv:7.0},badges:["매일 11–22시","치킨카레·크로켓","여성 인기","카드 불가"],why:"<b>매일 11:00–22:00 통으로 열어</b> 시간대를 안 가리는 몇 안 되는 집. 감자 크로켓과 치킨 카레가 간판이고 반찬 간이 하나하나 정확합니다. <b>집소 플레이트(1,980엔)</b>는 함바그·크로켓이 함께 나오는 큰 접시. 논알코올 레몬사와도 있음. <b>카드 결제가 안 되니 현금</b>을 챙기세요."},
+]},
+
+{cat:"우레시노 온천 🍵",jp:"嬉野温泉 (佐賀)",note:"12/6(일) 당일치기 구간. 우레시노의 간판은 <b>온천유도후(温泉湯豆腐)</b> — 알칼리성 온천수로 끓여 두부가 서서히 녹아 국물이 하얘지는 요리로, 여기 말고는 먹을 데가 없습니다. 그리고 <b>우레시노차</b>. 버스센터가 온천가 한가운데라 대부분 걸어서 닿습니다. <b>일요일은 일찍 닫는 가게가 많아 12시 점심을 권합니다.</b>",items:[
+  {ko:"소안 요코초",jp:"宗庵よこ長 / Yococho",loc:"버스센터 도보 6분",area:"嬉野",s:{taste:9.4,value:9.2,rep:9.4,access:9.2,conv:5.8},badges:["온천유도후 대표","리뷰 1,525","대기 45분","수요휴무","일요일 영업"],why:"<b>우레시노 온천유도후를 대표하는 집</b>(리뷰 1,525). 실크처럼 매끈한 두부가 국물에 녹아들고, 국물 자체가 깊은데도 전혀 무겁지 않습니다. 사시미를 곁들인 세트도 있음. 직원 일부가 영어를 하고 먹는 법을 먼저 설명해 줍니다. 다만 <b>피크엔 자리 45분 + 음식 30분</b>을 기다렸다는 리뷰가 여럿이니 <b>11시 오픈 직후</b>를 노리세요. 수요일 휴무, 일요일 영업."},
+  {ko:"사가 히라카와야 우레시노점",jp:"SAGA HIRAKAWAYA 嬉野店",loc:"버스센터 도보 5분",area:"嬉野",s:{taste:9.2,value:8.6,rep:9.2,access:9.5,conv:8.8},badges:["매일 9–18시","두부 소프트아이스크림","주차·카페 병설","포션 큼","가격 높은 편"],why:"<b>버스센터에서 가장 가깝고 매일 9–18시로 가장 길게 여는</b> 두부 전문점. 유도후 전골 포션이 아주 크고, <b>두부 소프트아이스크림(아래에 두부모찌가 깔림)</b>이 이 집의 진짜 간판입니다. 두부·모찌 선물 코너도 있음. “국물을 계속 끓이면 알칼리 맛이 강해지니 하얘졌을 때가 제일 맛있다”는 리뷰가 핵심 팁. 외국인 응대가 무뚝뚝했다는 리뷰가 있습니다."},
+  {ko:"후지카와 두부점",jp:"藤川豆腐店",loc:"유노타",area:"嬉野",s:{taste:9.5,value:9.5,rep:9.0,access:7.6,conv:6.2},badges:["평점 4.4","두부 무한 리필","수·목 휴무","15시 마감","주차 5대"],why:"<b>두부를 직접 만드는 집이 그대로 식당</b>. “실크 같은 두부 수프가 압도적이고 <b>리필이 무료</b>”라는 리뷰가 반복됩니다. 마파두부와 두부 전골 둘 다 평이 좋고 디저트도 괜찮음. 온천가에서 조금 떨어져 있지만 택시로 금방입니다. <b>일요일 11:00–15:00 영업</b>, 수·목 휴무. 주차는 5대뿐."},
+  {ko:"시즈",jp:"shizu / 旬",loc:"이와야가와치",area:"嬉野",s:{taste:9.2,value:9.2,rep:8.8,access:8.4,conv:8.2},badges:["영어 메뉴","개별 룸","가족 경영","월요휴무","21:30까지"],why:"유도후 세트와 <b>짬뽕을 같이 파는</b> 가족 식당. “후쿠오카에서 나가사키 가는 길에 들렀는데 따뜻한 전통 분위기였다”, “<b>영어 메뉴가 있고</b> 개별 룸에 앉혀줬다”는 리뷰. 치킨난반과 김치찌개도 평이 좋습니다. <b>일요일 11:30–21:00</b>으로 길게 열어 점심 시간을 놓쳤을 때의 보험. 월요일 휴무."},
+  {ko:"후쿠다 두부점",jp:"福田豆腐店",loc:"시모주쿠",area:"嬉野",s:{taste:9.4,value:9.6,rep:9.0,access:7.4,conv:6.0},badges:["평점 4.7","포장 전문","콩 크로켓","수요휴무","16시 마감"],why:"<b>온천수로 두부를 만드는 공장 직판장</b>(4.7). 앉아서 먹는 곳이 아니라 <b>사 가는 가게</b>입니다. 희석하지 않은 진한 두유와 <b>콩 크로켓</b>이 추천 1순위이고, 비건 초콜릿 두부도 있습니다. 현지인이 끊임없이 드나드는 진짜 동네 가게. 6:00–16:00, 수요일 휴무."},
+  {ko:"티하우스 토쿠나가",jp:"Tea House TOKUNAGA / 徳永製茶",loc:"버스센터 도보 15분",area:"嬉野",s:{taste:9.3,value:9.6,rep:8.8,access:8.0,conv:8.6},badges:["무료 시음","매일 8:30–17:30","우레시노차 구입","제다원 직영"],why:"<b>우레시노차를 공짜로 제대로 맛볼 수 있는 제다원 직영점.</b> 들어가면 주인이 바로 주전자를 올리고 <b>센차 → 겐마이차 → 홍차</b> 순으로 내어 줍니다. 파는 압박 없이 앉아서 마시게 해주는 분위기. <b>매일 8:30–17:30</b>이라 일요일에도 확실하고, 선물용 차를 여기서 사면 됩니다. 일정의 13:00 찻집 슬롯에 가장 잘 맞습니다."},
+  {ko:"우레시노차 교류관 차오시루",jp:"嬉野茶交流館 チャオシル",loc:"이와야가와치",area:"嬉野",s:{taste:9.0,value:9.6,rep:8.8,access:6.8,conv:8.2},badges:["입장 무료","3종 시음 300엔","영어 안내","화요휴무","택시 10분"],why:"<b>녹차밭 한가운데 있는 차 박물관 겸 카페</b>. 입장 무료에 영어 안내가 있고, 부속 카페에서 <b>3종 시음이 300엔</b>입니다. 아이스크림·과자도 있음. 일정의 <b>“녹차밭 풍경 + 찻집” 13:00 슬롯에 가장 정확히 들어맞는 곳</b> — 버스센터에서 택시 10분. 전망이 좋아 두 시간을 앉아 있었다는 리뷰도. 화요일 휴무, 9:00–17:00."},
+  {ko:"오차노 우레시노엔",jp:"お茶の嬉野園",loc:"우레시노 북부",area:"嬉野",s:{taste:9.2,value:9.0,rep:8.6,access:7.0,conv:8.6},badges:["평점 4.6","매일 8:30–18:30","선물 포장","시음 제공"],why:"<b>매일 8:30–18:30으로 이 카테고리에서 가장 길게 여는</b> 차 가게(4.6). 들어가면 바로 차를 내어 주고, 선물용 소분 패키지가 잘 갖춰져 있습니다. 냉침차가 특히 평이 좋음. 차밭 쪽에서 돌아오는 길에 들르기 좋고, 토쿠나가에 못 갔을 때의 대안입니다."},
+  {ko:"티 살롱 츠바키",jp:"Tea Salon TSUBAKI",loc:"와타야벳소 내",area:"嬉野",s:{taste:9.6,value:8.4,rep:9.0,access:9.0,conv:4.0},badges:["평점 5.0","20시부터만","차 믹솔로지","화요휴무","당일치기 불가"],why:"<b>평점 5.0</b>의 차 믹솔로지 바. 우레시노차를 베이스로 카시스·깔루아 등을 섞은 칵테일을 내고, 공간 자체가 압도적이라는 리뷰가 일관됩니다. 다만 <b>20:00–24:00에만 영업</b>해서 <b>16:21 버스로 돌아오는 이번 일정으로는 갈 수 없습니다</b> — 우레시노에서 1박을 하게 될 경우에만 해당. 화요일 휴무."},
+ ]},
+{cat:"나가사키 Top 10",jp:"総合 TOP 10",top:1,note:"음식 종류를 가리지 않고 <b>맛·평판·가성비·동선을 종합</b>한 10곳. 2박 3일이면 이 안에서 6~7곳이면 충분합니다. 번호는 종합 점수 순.",items:[
+  {ko:"카츠시카",jp:"かつしか / Katsushika",loc:"신치중화가 · 돈까스",s:{taste:9.6,value:9.3,rep:9.3,access:9.6,conv:7.2},badges:["종합 1위","매일 영업","리필 무한","★4.6·708"],why:"<b>맛·가성비·위치·영업일 네 박자가 전부 맞는 유일한 집.</b> 중화가 맞은편이라 짬뽕 줄이 길면 바로 건너갈 수 있고, 매일 11:30–21:00이라 어느 끼니에도 끼울 수 있습니다. 등심 중간 사이즈 1,850엔에 밥·국·양배추 무한 리필."},
+  {ko:"이와사키혼포 니시하마마치",jp:"岩崎本舗 西浜町店",loc:"도자마치 · 카쿠니만주",s:{taste:9.4,value:8.6,rep:9.4,access:9.6,conv:8.6},badges:["나가사키 대표 간식","앉아서 먹기 가능","9:30–21:00","★4.7·1,530"],why:"나가사키에서 <b>반드시 한 번은 먹어야 할 음식</b>이고, 여러 지점 중 <b>앉아서 따뜻하게 먹을 수 있는 유일한 곳</b>입니다. ‘오토로’ 버전으로 시키세요. 늦게까지 열어 야식으로도 가능."},
+  {ko:"야키토리 렌",jp:"焼鳥 れん / Yakitori Ren",loc:"도자마치 · 야키토리",s:{taste:9.6,value:9.0,rep:9.0,access:9.5,conv:7.0},badges:["영어 안내지","오마카세식","야키오니기리","수요휴무","★4.6·81"],why:"상위 야키토리 중 <b>외국인이 가장 편하게 먹을 수 있는 집</b>. 5·7·10개 중 고르면 알아서 내주고, 2라운드부터 직접 고릅니다. 마늘버터 야키오니기리는 필수."},
+  {ko:"스시 히노카",jp:"鮨ひのか / Sushi Hinoka",loc:"아부라야마치 · 스시",s:{taste:9.7,value:8.2,rep:9.3,access:9.3,conv:5.5},badges:["평점 4.8","점심 오마카세 가성비","예약필수","월·일 휴무","★4.8·44"],why:"나가사키 스시의 정점. <b>점심 오마카세가 가격 대비 가장 좋다</b>는 평이 일관됩니다. 12:00 한 타임이니 <b>12/5(토) 점심을 지금 예약</b>하는 게 유일한 방법."},
+  {ko:"후쿠쥬",jp:"福寿 / Fukuju",loc:"신치중화가 · 짬뽕",s:{taste:9.4,value:9.2,rep:8.6,access:9.4,conv:6.8},badges:["짬뽕 맛 1위","웍 불맛","현금만","★4.2·667"],why:"<b>원조(시카이로)가 아니라 맛으로 짬뽕을 먹고 싶다면 여기.</b> 메인 골목에서 한 블록 비켜나 있어 대기도 상대적으로 짧습니다. 사라우동까지 같이 시키세요. 현금 필수."},
+  {ko:"코이소",jp:"小磯 / Koiso",loc:"시안바시 · 이자카야",s:{taste:9.6,value:8.8,rep:9.2,access:9.4,conv:5.6},badges:["현지인 1픽","오반자이","예약 필수","일요휴무","★4.5·184"],why:"<b>나가사키에서 가장 ‘현지인의 밤’에 가까운 집.</b> 카운터의 오반자이를 보고 고르고, 사시미에 고래·방어가 들어갑니다. 예약 없이는 못 들어가니 <b>12/5(토) 저녁으로 미리 잡으세요</b>."},
+  {ko:"운류테이 교자 하마노마치",jp:"雲龍亭 浜町店",loc:"하마마치 · 교자",s:{taste:9.5,value:9.4,rep:9.0,access:9.6,conv:6.0},badges:["한입교자 20개","부추 간 오믈렛","재료 소진 마감","월요휴무","★4.3·310"],why:"한입교자 20개 + 레바니라타마 오믈렛 + 생맥주. <b>이 조합 하나로 완성되는 집</b>입니다. 좌석 10석 미만에 재료가 떨어지면 닫으니 <b>14:30 오픈 직후</b>를 노리세요."},
+  {ko:"하마나카 스이산",jp:"濱中水産(浜康)",loc:"신다이쿠마치 · 해산물",s:{taste:9.4,value:9.9,rep:9.2,access:8.2,conv:4.8},badges:["사시미정식 880엔","가성비 1위","11–13시만","목·일 휴무","★4.5·175"],why:"<b>가성비로는 이 가이드 전체 1등.</b> 생선가게 직영이라 880엔에 사시미 정식이 나옵니다. 영업이 두 시간뿐이고 목·일 휴무라 <b>12/5(토) 점심이 사실상 유일한 기회</b>."},
+  {ko:"라멘 히이라기",jp:"らーめん 柊 / Ramen Hiiragi",loc:"도자마치 · 라멘",s:{taste:9.4,value:9.0,rep:9.2,access:9.5,conv:8.6},badges:["토마토라멘","새벽 3–5시까지","리뷰 1,956","★4.3·1,956"],why:"술 마시고 <b>새벽에 마무리할 집</b>. 토마토 국물에 튀긴 가지라는 조합이 나가사키에서만 가능한 경험입니다. 금·토 새벽 5시까지."},
+  {ko:"바 나가타",jp:"Bar Nagata",loc:"도자마치 · 바",s:{taste:9.5,value:8.8,rep:9.2,access:9.5,conv:7.2},badges:["평점 4.8","군함도 칵테일","나가사키 테마","일요휴무","★4.8·52"],why:"나가사키를 <b>술로 마셔보는 경험</b>. 군함도·중화가에서 따온 시그니처 칵테일이 있고, 평화공원을 본 날 밤에 특히 어울립니다. 20시부터."},
+]},
+];
+
+DATA.forEach(c=>{c.items.forEach(i=>i.ov=overall(i.s));if(!c.top)c.items.sort((a,b)=>b.ov-a.ov);});
+
+const tabs=document.getElementById('tabs');
+const main=document.getElementById('main');
+const AX=[["taste","맛","f-taste"],["rep","평판","f-rep"],["value","가성비","f-value"],["access","접근성","f-access"],["conv","편의성","f-conv"]];
+
+function cardHTML(it,idx,isTop){
+  const top=idx===0;
+  let bars='';
+  AX.forEach(([k,lab,cls])=>{
+    bars+=`<div class="bar"><span class="lab">${lab}</span><div class="track"><div class="fill ${cls}" data-w="${it.s[k]*10}"></div></div><span class="sc">${it.s[k].toFixed(1)}</span></div>`;
+  });
+  let bd='';
+  it.badges.forEach(b=>{
+    let cl='badge';
+    if(b.includes('★'))cl='badge star';
+    else if(/예약|휴무|현금|대기|웨이팅|고가|비쌈|관광객|좁|적음|비싼|점심만|소진|불가|거절|불만|호불호|편차|멂|흡연|주의|짧/.test(b))cl='badge r';
+    else if(/1위|최고|최상|명물|원조|성지|가성비|노포|히든|전문|리필|무한|평점|정수|대표|종합/.test(b))cl='badge g';
+    bd+=`<span class="${cl}">${b}</span>`;
+  });
+  return `<div class="card${top?' top':''}">
+    <span class="rank">${isTop?'#'+(idx+1):(top?'BEST':'#'+(idx+1))}</span>
+    ${it.loc?`<span class="loc-pill">${it.loc}</span>`:''}
+    <div class="card-top">
+      <div class="stamp"><span class="v">${it.ov.toFixed(1)}</span><span class="l">SCORE</span></div>
+      <div class="meta">
+        <div class="name-ko">${it.ko}</div>
+        <div class="name-jp">${it.jp}</div>
+        <div class="badges">${bd}</div>
+      </div>
+    </div>
+    <div class="bars">${bars}</div>
+    <div class="why">${it.why}</div>
+    <a class="maplink" href="${mapUrl(it)}" target="_blank" rel="noopener">📍 구글 지도에서 열기</a>
+  </div>`;
+}
+
+
+const ITIN=[{"no": "DAY 1", "date": "12/5 (토)", "theme": "항구 언덕 + 이나사야마 야경 + 요코초", "rows": [{"t": "09:30", "txt": "나가사키 공항 도착 · 입국", "memo": "Visit Japan Web QR 미리 준비", "links": [{"n": "나가사키 공항", "q": "長崎空港", "p": null}]}, {"t": "10:15", "txt": "공항버스 탑승", "memo": "국제선 출구 앞 5번 승강장(데지마 도로 경유) · 약 35분 · 1,400엔 · 교통카드 가능", "links": []}, {"t": "10:50", "txt": "신치 중화가 하차 → 숙소에 짐 맡기기", "memo": "도보", "links": [{"n": "신치 중화가", "q": "長崎新地中華街", "p": "ChIJK3MfoRVTFTURFhFVj6JIlxE"}]}, {"t": "11:30", "txt": "차이나타운 산책 + 점심", "meal": "점심", "memo": "🍜 짬뽕은 <b>후쿠쥬</b>(맛 1위·현금만·11~14시) · 줄이 길면 맞은편 <b>카츠시카</b>(돈까스 1위·매일 영업)로 건너가세요. 간식은 <b>이와사키혼포 니시하마마치</b>의 카쿠니만주.", "links": [{"n": "후쿠쥬", "q": "福寿 長崎", "p": "ChIJtXVluRVTFTUR9U32Bqhciqs"}, {"n": "카츠시카", "q": "かつしか 長崎", "p": "ChIJy8c8RRRTFTURz8dJ-oyDhc4"}, {"n": "이와사키혼포 니시하마마치", "q": "岩崎本舗 西浜町店", "p": "ChIJS92HdRVTFTURLqCf9-t1dbY"}]}, {"t": "12:45", "txt": "메가네바시 · 나카시마강", "memo": "도보 약 15분 · 강변 석축의 하트 돌 찾기 · ☕ 쉬어간다면 다리 바로 옆 <b>마루산카쿠시카쿠</b>(평점 4.9 핸드드립)", "links": [{"n": "메가네바시", "q": "眼鏡橋 長崎", "p": null}, {"n": "나카시마강", "q": "中島川 長崎", "p": null}, {"n": "마루산카쿠시카쿠", "q": "まるさんかくしかく 長崎", "p": "ChIJ1_LpLHhTFTURjiJ6c-kYJ1Q"}]}, {"t": "13:45", "txt": "오란다자카 · 히가시야마테 골목", "memo": "전차 5번 계통으로 오우라해안도리까지 · ☕ 언덕 중턱 <b>히가시야마테 13번관</b>에서 카스테라+홍차 550엔 (16시 마감)", "links": [{"n": "오란다자카", "q": "オランダ坂 長崎", "p": null}, {"n": "히가시야마테 13번관", "q": "東山手十三番館", "p": "ChIJnfTVYxFTFTURnQEZ7ZWSrlk"}]}, {"t": "14:30", "txt": "이시바시 정류장 → 글로버 스카이로드로 올라가기", "memo": "도보 10분 · 무료 사면 엘리베이터 · 🥟 올라가는 길에 <b>이와사키 미나미야마테</b> 카쿠니만주 (18:15까지, 솔개 주의)", "links": [{"n": "이시바시 정류장", "q": "石橋電停 長崎", "p": null}, {"n": "글로버 스카이로드", "q": "グラバースカイロード", "p": null}, {"n": "이와사키 미나미야마테", "q": "岩崎本舗 グラバー園店", "p": "ChIJZeeWww9TFTURQ219vW0bI7g"}]}, {"t": "14:40", "txt": "글로버 정원 — 꼭대기부터 천천히 내려오기", "memo": "1시간 반~2시간 · 1,300엔 · 구 미쓰비시 제2독 하우스 베란다가 항구 전망 최고 자리", "links": [{"n": "글로버 정원", "q": "グラバー園", "p": null}]}, {"t": "16:30", "txt": "택시로 로프웨이 후치진자역", "memo": "약 15분 · 둘이 나눠 1인 약 800엔", "links": [{"n": "후치진자역", "q": "長崎ロープウェイ 淵神社駅", "p": null}]}, {"t": "16:45", "txt": "로프웨이로 이나사야마 전망대", "memo": "5분 · 왕복 1,900엔 · 산 위는 바람이 세니 목도리 필수", "links": [{"n": "이나사야마 전망대", "q": "稲佐山展望台", "p": null}]}, {"t": "17:10", "txt": "일몰 → 매직아워 → 야경", "memo": "12월 초 일몰 17:10 전후 · 사진은 일몰 후 20~30분이 제일 잘 나옵니다", "links": []}, {"t": "18:30", "txt": "하산 → 버스로 나가사키역 앞 → 전차로 시안바시", "memo": "로프웨이 앞 정류장에서 나가사키 버스 3·4번", "links": [{"n": "나가사키역", "q": "長崎駅", "p": null}, {"n": "시안바시", "q": "思案橋電停 長崎", "p": null}]}, {"t": "19:00", "txt": "시안바시 요코초에서 저녁 겸 술", "meal": "저녁·술", "memo": "🍶 토요일이라 선택지가 가장 넓은 날 — <b>코이소</b>(오반자이, 현지인 1픽, <b>예약 필수</b>) / <b>이케다 센교</b>(QR 영어주문, 스시+술) / <b>우미토</b>(하토시 명물). 야키토리면 <b>야키토리 렌</b>(영어 안내지).", "links": [{"n": "시안바시 요코초", "q": "思案橋横丁", "p": null}, {"n": "코이소", "q": "小磯 長崎", "p": "ChIJS7EmA0BTFTURafRsVICQVeU"}, {"n": "이케다 센교", "q": "池田鮮魚 長崎", "p": "ChIJIbVuHHdTFTURcUue8vyxLbk"}, {"n": "우미토", "q": "海と 長崎", "p": "ChIJu7CHAUBTFTURi1N56qu0hxU"}, {"n": "야키토리 렌", "q": "焼鳥 れん 長崎", "p": "ChIJW9zfNcdTFTURGEf4at2vBgs"}]}, {"t": "22:00", "txt": "데지마 워프에서 편의점 맥주로 항구 야경 마무리", "memo": "숙소까지 도보 · 🍜 더 가고 싶으면 <b>라멘 히이라기</b>(토마토라멘, 토요일 새벽 5시까지)", "links": [{"n": "데지마 워프", "q": "長崎出島ワーフ", "p": "ChIJI8DztBdTFTURpsfpv4tzSsI"}, {"n": "라멘 히이라기", "q": "らーめん柊 長崎", "p": "ChIJc5IqUhVTFTUR35tUai8Msag"}]}]}, {"no": "DAY 2", "date": "12/6 (일)", "theme": "우레시노 온천 마을 당일치기", "rows": [{"t": "08:30", "txt": "숙소에서 여유 있게 아침", "meal": "아침", "memo": "☕ 일요일이라 분분·후지오 같은 노포 킷사는 대부분 닫거나 시간이 빠듯합니다 — 편의점이나 <b>나가사키역 카모메 시장</b>에서 간단히.", "links": []}, {"t": "09:40", "txt": "나가사키역 앞 현영버스 터미널 도착", "memo": "출발 10분 전 · 예약 확인 화면 준비", "links": [{"n": "현영버스 터미널", "q": "長崎県営バスターミナル", "p": null}]}, {"t": "10:00", "txt": "규슈호 탑승 (46315편)", "memo": "예약 완료 · 1시간 9분 · 좌석지정제", "links": []}, {"t": "11:09", "txt": "우레시노 버스센터 도착 → 온천 거리·강변 산책 · 도요타마히메 신사", "memo": "버스센터가 온천가 한가운데라 내리자마자 걸어서 다닐 수 있습니다", "links": [{"n": "우레시노 버스센터", "q": "嬉野バスセンター", "p": null}, {"n": "도요타마히메 신사", "q": "豊玉姫神社 嬉野", "p": null}]}, {"t": "12:00", "txt": "점심 — 온천유도후", "meal": "점심", "memo": "🥘 <b>소안 요코초</b>(유도후 대표·일요일 영업·11시 오픈 직후 가야 대기 없음) / 버스센터에서 더 가까운 <b>사가 히라카와야</b>(매일 9–18시, 두부 소프트아이스크림 필수) / 시간 놓치면 <b>시즈</b>(일요일 21시까지).", "links": [{"n": "소안 요코초", "q": "宗庵よこ長 嬉野", "p": "ChIJeRS2TaogQDURpiB8_MZ7Cl8"}, {"n": "사가 히라카와야", "q": "SAGA HIRAKAWAYA 嬉野店", "p": "ChIJazTsKFUnQDURW_kpK1tuXps"}, {"n": "시즈", "q": "shizu 嬉野", "p": "ChIJ7zTDB6kgQDURuRFSIqWxjoY"}]}, {"t": "13:00", "txt": "녹차밭 풍경 + 찻집에서 우레시노차", "meal": "찻집", "memo": "🍵 차밭 한가운데 <b>우레시노차 교류관 차오시루</b>(입장 무료·3종 시음 300엔·택시 10분) / 걸어갈 거면 <b>티하우스 토쿠나가</b>(무료 시음·매일 8:30–17:30·선물용 차 구입)", "links": [{"n": "우레시노차 교류관 차오시루", "q": "嬉野茶交流館 チャオシル", "p": "ChIJLU3c8qwgQDURfaoZiULqSEQ"}, {"n": "티하우스 토쿠나가", "q": "徳永製茶 嬉野", "p": "ChIJFWQMjQCeajUR_e8IxC_2jgk"}]}, {"t": "14:30", "txt": "시볼트노유에서 온천", "memo": "1시간 여유 있게 · 수건 챙기기", "links": [{"n": "시볼트노유", "q": "シーボルトの湯 嬉野", "p": null}]}, {"t": "15:40", "txt": "시볼트 족욕에서 쉬기", "memo": "무료 · 24시간", "links": [{"n": "시볼트 족욕", "q": "シーボルトのあし湯 嬉野", "p": null}]}, {"t": "16:10", "txt": "우레시노 버스센터로 이동", "memo": "승차권 창구 없음 · 예약 화면 제시 · <b>이 편을 놓치면 대안이 마땅치 않습니다</b>", "links": [{"n": "우레시노 버스센터", "q": "嬉野バスセンター", "p": null}]}, {"t": "16:21", "txt": "규슈호 탑승 (46314편) → 17:28 나가사키역", "memo": "예약 완료", "links": [{"n": "나가사키역", "q": "長崎駅", "p": null}]}, {"t": "18:00", "txt": "시안바시 요코초에서 저녁 겸 술", "meal": "저녁·술", "memo": "⚠️ <b>일요일은 코이소·우미토·히마야·야키토리 키타자와가 전부 휴무</b>입니다. 여는 곳으로 — <b>잇초잇제츠</b>(일요일 14시부터·숙성 규탄) / <b>이케다 센교</b>(스시+술) / <b>자코야</b>(일요일 12시부터·오늘의 생선). 마무리는 <b>라멘 히이라기</b>(새벽 3시까지).", "links": [{"n": "시안바시 요코초", "q": "思案橋横丁", "p": null}, {"n": "잇초잇제츠", "q": "逸鳥逸舌 長崎思案橋店", "p": "ChIJB8X1ZKNTFTURUhByHMeJkqg"}, {"n": "이케다 센교", "q": "池田鮮魚 長崎", "p": "ChIJIbVuHHdTFTURcUue8vyxLbk"}, {"n": "자코야", "q": "雑魚屋 長崎思案橋店", "p": "ChIJ44HqHkBTFTURcMbe4aJI8wM"}, {"n": "라멘 히이라기", "q": "らーめん柊 長崎", "p": "ChIJc5IqUhVTFTUR35tUai8Msag"}]}]}, {"no": "DAY 3", "date": "12/7 (월)", "theme": "출국", "rows": [{"t": "07:00", "txt": "체크아웃 · 편의점 아침", "meal": "아침", "memo": "", "links": []}, {"t": "07:50", "txt": "신치 중화가 정류장에서 공항버스", "memo": "약 35분 · 1,400엔", "links": [{"n": "신치 중화가", "q": "長崎新地中華街", "p": "ChIJK3MfoRVTFTURFhFVj6JIlxE"}]}, {"t": "08:30", "txt": "나가사키 공항 도착 · 체크인", "memo": "🎁 선물용 카스테라는 공항 매장에서 · 시간이 남으면 <b>나가사키역 쇼오켄</b>(8:30–20:00)에서 미리 사도 됩니다", "links": [{"n": "나가사키 공항", "q": "長崎空港", "p": null}, {"n": "나가사키역 쇼오켄", "q": "松翁軒 長崎街道かもめ市場店", "p": "ChIJL1-lpztTFTURJsHqIDpWebo"}]}, {"t": "10:40", "txt": "대한항공 출발 → 12:20 인천", "memo": "국제선은 2시간 전 도착이 안전", "links": []}]}];
+
+function pUrl(l){
+  const q=encodeURIComponent(l.q);
+  return l.p?`https://www.google.com/maps/search/?api=1&query=${q}&query_place_id=${l.p}`
+            :`https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+function linkify(txt,links){
+  if(!links||!links.length) return txt;
+  links.slice().sort((a,b)=>b.n.length-a.n.length).forEach(l=>{
+    if(txt.indexOf(l.n)<0) return;
+    const a=`<a class="plink" href="${pUrl(l)}" target="_blank" rel="noopener">${l.n}📍</a>`;
+    txt=txt.split(l.n).join(a);
+  });
+  return txt;
+}
+(function(){
+  const t=document.createElement('button');
+  t.className='tab on';
+  t.innerHTML=`<span class="n">00</span>일정표`;
+  t.onclick=()=>activate('itin',t);
+  tabs.appendChild(t);
+  const sec=document.createElement('section');
+  sec.className='section on';sec.id='itin';
+  let h=`<div class="sec-head"><h3>2박 3일 최종 일정</h3><span class="jp">12/5 – 12/7 · 남자 2명</span></div>
+  <div class="itin-intro"><b>장소 이름을 누르면 구글 지도</b>로 바로 열립니다. 끼니 칸(🍜🥘🍶)에는 이 가이드의 맛집 중 그 시간·동선·휴무에 맞는 곳만 넣었습니다.</div>`;
+  ITIN.forEach(d=>{
+    h+=`<div class="day"><div class="day-top"><span class="day-no">${d.no}</span><span class="day-date">${d.date}</span><span class="day-theme">${d.theme}</span></div><div class="rows2">`;
+    d.rows.forEach(r=>{
+      const txt=linkify(r.txt,r.links);
+      const memo=r.memo?`<span class="memo">${linkify(r.memo,r.links)}</span>`:'';
+      h+=`<div class="irow2${r.meal?' eat':''}"><div class="t">${r.t}</div><div class="itxt">${r.meal?`<span class="meal">${r.meal}</span>`:''}${txt}${memo}</div></div>`;
+    });
+    h+=`</div></div>`;
+  });
+  h+=`<div class="warnbox"><h4>이 일정에서 꼭 챙길 것</h4>
+    <b>① 12/5(토) 저녁 예약.</b> 코이소는 예약 없이는 거의 못 들어갑니다. 지금 잡아두세요.<br>
+    <b>② 12/6(일) 휴무 주의.</b> 코이소·우미토·히마야·야키토리 키타자와·운류테이 교자가 전부 일요일 휴무입니다. 일요일 저녁은 잇초잇제츠·이케다 센교·자코야 쪽으로.<br>
+    <b>③ 12/7(월) 휴무 주의.</b> 츠키마치 요코초·운류테이 교자·야키토리 키타자와가 월요일 휴무지만, 07:50 공항버스라 어차피 식사 일정은 없습니다.<br>
+    <b>④ 현금.</b> 중화가 짬뽕집·츄카 다이하치·집소·야키토리 부쇼몬은 카드가 안 됩니다. 1인 2만 엔 이상 현금으로.<br>
+    <b>⑤ 하마나카 스이산(사시미정식 880엔)</b>은 11–13시 2시간만 열고 목·일 휴무라, 이번 일정에서는 <b>갈 틈이 없습니다</b>. 다음을 기약하세요.</div>`;
+  sec.innerHTML=h;main.appendChild(sec);
+})();
+
+DATA.forEach((c,ci)=>{
+  const t=document.createElement('button');
+  t.className='tab';
+  t.innerHTML=`<span class="n">${String(ci+1).padStart(2,'0')}</span>${c.cat}`;
+  t.onclick=()=>activate('sec'+ci,t);
+  tabs.appendChild(t);
+
+  const sec=document.createElement('section');
+  sec.className='section';
+  sec.id='sec'+ci;
+  sec.innerHTML=`<div class="sec-head"><h3>${c.cat}</h3><span class="jp">${c.jp}</span><span class="cnt">${c.items.length}곳</span></div>
+    ${c.note?`<div class="sec-note"><span class="ar">↳</span><span>${c.note}</span></div>`:''}
+    ${c.items.map((i,x)=>cardHTML(i,x,c.top)).join('')}`;
+  main.appendChild(sec);
+});
+
+function activate(id,el){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:tabs.offsetTop-2,behavior:'smooth'});
+  fillBars(id);
+}
+function fillBars(id){
+  setTimeout(()=>{document.querySelectorAll('#'+id+' .fill').forEach(f=>{f.style.width=f.dataset.w+'%';});},60);
+}
+
+
+</script>
+</body>
+</html>
